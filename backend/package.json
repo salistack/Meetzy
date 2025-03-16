@@ -1,0 +1,31 @@
+{
+  "name": "meetzy",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salistack/Meetzy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/salistack/Meetzy/issues"
+  },
+  "homepage": "https://github.com/salistack/Meetzy#readme",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.12.1",
+    "nodemon": "^3.1.9"
+  },
+  "devDependencies": {
+    "@ljharb/tsconfig": "^0.3.2"
+  }
+}
