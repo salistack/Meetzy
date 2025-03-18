@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
-const path = require("path"); // Add this line
-const { createGroup, getAllGroups, getGroupById, updateGroup, deleteGroup } = require("../Controllers/GroupController");
+const path = require("path");
+const { createGroup, getAllGroups, getGroupById, updateGroup, deleteGroup, joinGroup } = require("../Controllers/GroupController");
 
 const router = express.Router();
 
@@ -22,5 +22,6 @@ router.get("/", getAllGroups); // Get all groups
 router.get("/:id", getGroupById); // Get a specific group by ID
 router.put("/:id", upload.single("image"), updateGroup); // Update group with optional image upload
 router.delete("/:id", deleteGroup); // Delete a group by ID
+router.post("/:id/join", joinGroup); // Add user to group
 
 module.exports = router;
