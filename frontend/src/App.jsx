@@ -1,33 +1,43 @@
 import React from "react";
-import Header from "./components/user/Header"; 
-
-
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import Header from "./Components/Header"; 
 
 function App() {
+  const navigate = useNavigate(); // Initialize navigation
+
   return (
     <>
       <Header />
-      
-      <div class="dashboard-container">
-        <button class="admin-button" onclick="goToAdminPanel()">Go to Admin Panel</button>
-    </div>
 
-    <div class="blog">
-        <button class="blog" onclick="goToAdminPanel()">blog Panel</button>
-    </div>
+      <div className="dashboard-container">
+        <button className="admin-button" onClick={() => navigate("/admin")}>
+          Go to Admin Panel
+        </button>
+      </div>
 
-    <div class="group">
-        <button class="group" onclick="goToAdminPanel()">group Panel</button>
-    </div>
-      
-    <div class="profile">
-        <button class="profile" onclick="goToAdminPanel()">profil Panel</button>
-    </div>
+      <div className="blog">
+        <button className="blog-button" onClick={() => navigate("/user/blogs")}>
+          Blog
+        </button>
+      </div>
 
-    <div class="feed">
-        <button class="feed" onclick="goToAdminPanel()">feed Panel</button>
-    </div>
-    
+      <div className="group">
+        <button className="group-button" onClick={() => navigate("/group")}>
+          Group Panel
+        </button>
+      </div>
+
+      <div className="profile">
+        <button className="profile-button" onClick={() => navigate("/profile")}>
+          Profile Panel
+        </button>
+      </div>
+
+      <div className="feed">
+        <button className="feed-button" onClick={() => navigate("/feed")}>
+          Feed Panel
+        </button>
+      </div>
     </>
   );
 }

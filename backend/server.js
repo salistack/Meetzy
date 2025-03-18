@@ -3,17 +3,27 @@ const mongoose = require("mongoose");
 const connectDB = require("./config/db.js");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const app = express();
-const blogRoutes = require("./routes/BlogRoutes");
-const broadcastRoutes = require("./routes/BroadcastRoutes"); // Import broadcast routes
+
+const blogRoutes = require("./routes/BlogRoutes"); // Import routes
 
 dotenv.config();
 connectDB();
-app.use(cors());
-app.use(express.json());
 
+const app = express();
+
+// ✅ Allow frontend requests from localhost:5173 BEFORE routes
+app.use(cors({
+  origin: "http://localhost:5173", 
+  methods: ["GET", "POST", "PUT", "DELETE"], 
+  allowedHeaders: ["Content-Type"]
+}));
+
+app.use(cors());
+
+app.use(express.json()); // Middleware to parse JSON
+
+// ✅ Apply routes AFTER CORS middleware
 app.use("/api/blogs", blogRoutes);
-app.use("/api/broadcasts", broadcastRoutes); // Use broadcast routes
 
 const PORT = process.env.PORT || 5000;
 

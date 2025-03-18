@@ -1,0 +1,88 @@
+/* Container for the entire blog details page */
+div {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+/* Blog Grid - Display Horizontally */
+.blog-grid {
+    display: flex; /* Use Flexbox */
+    flex-wrap: wrap; /* Allows wrapping if there are too many items */
+    gap: 20px; /* Adds space between blog cards */
+    justify-content: flex-start; /* Aligns items to the start */
+    align-items: stretch; /* Ensures cards have equal height */
+}
+
+/* Blog Card */
+.blog-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: 300px; /* Set a fixed width for each card */
+    width: 100%;
+    text-align: center;
+}
+
+/* Blog Card Hover Effect */
+.blog-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Blog Title */
+h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Blog Author */
+.blog-author {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* Image Styling */
+img {
+    width: 100%;
+    height: auto;
+    max-width: 250px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+/* Read More Link */
+.read-more {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #007bff;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: 2px solid #007bff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.read-more:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+    .blog-grid {
+        flex-direction: column; /* Stack items vertically on smaller screens */
+    }
+
+    .blog-card {
+        max-width: 100%;
+    }
+}

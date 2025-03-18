@@ -17,15 +17,24 @@ const createBlog = async (req, res) => {
   }
 };
 
-// Get All Blogs
-const getAllBlogs = async (req, res) => {
+// // Get All Blogs
+// const getAllBlogs = async (req, res) => {
+//   try {
+//     const blogs = await Blog.find().sort({ createdAt: -1 });
+//     res.status(200).json({ count: blogs.length, blogs });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
+ const getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find().sort({ createdAt: -1 });
-    res.status(200).json({ count: blogs.length, blogs });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    const blogs = await Blog.find();
+    res.json(blogs); // ✅ Directly send an array
+} catch (error) {
+    res.status(500).json({ message: "Server error" });
+}
+};   
 
 // Get a Single Blog by ID
 const getBlogById = async (req, res) => {

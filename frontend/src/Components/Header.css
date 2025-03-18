@@ -46,7 +46,7 @@
   border-radius: 5px;
   cursor: pointer;
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  
   color: white;
   font-family: 'Poppins', sans-serif;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

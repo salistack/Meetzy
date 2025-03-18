@@ -1,0 +1,73 @@
+/* BlogCard.css */
+
+/* General Blog Card Styling */
+.blog-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: 350px;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* Hover Effect for Blog Card */
+.blog-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Title Styling */
+.blog-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+/* Author Name Styling */
+.blog-author {
+    font-size: 1rem;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+/* 'Read More' Link Styling */
+.read-more {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #007bff;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: 2px solid #007bff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover Effect for 'Read More' Link */
+.read-more:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Responsive Styling for the Card */
+@media (max-width: 768px) {
+    .blog-card {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .blog-title {
+        font-size: 1.6rem;
+    }
+
+    .blog-author {
+        font-size: 0.9rem;
+    }
+}
