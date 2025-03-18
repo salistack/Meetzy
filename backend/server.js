@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const connectDB = require("./config/db.js");
 const dotenv = require("dotenv");
 const cors = require("cors");
-
+const broadcastRoutes = require("./routes/BroadcastRoutes");
 const blogRoutes = require("./routes/BlogRoutes"); // Import routes
 
 dotenv.config();
@@ -24,6 +24,7 @@ app.use(express.json()); // Middleware to parse JSON
 
 // ✅ Apply routes AFTER CORS middleware
 app.use("/api/blogs", blogRoutes);
+app.use("/api/broadcasts", broadcastRoutes);
 
 const PORT = process.env.PORT || 5000;
 
