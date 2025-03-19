@@ -33,9 +33,9 @@ const Broadcast = () => {
   };
 
   const handleUpdate = async (id) => {
-    if (!editMessage.trim()) return alert("Message cannot be empty!");
+    if (!editMessage.text.trim()) return alert("Message cannot be empty!");
     try {
-      const response = await axios.put(`${API_BASE_URL}/broadcasts/${id}`, { message: editMessage });
+      const response = await axios.put(`${API_BASE_URL}/broadcasts/${id}`, { message: editMessage.text });
       setMessages(messages.map((msg) => (msg._id === id ? response.data.broadcast : msg)));
       setEditMessage(null);
     } catch (error) {
