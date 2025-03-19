@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiHome, FiSearch, FiSend, FiBarChart2, FiMenu, FiX } from "react-icons/fi";
+import Broadcast from "./Broadcast"; // Import the Broadcast component
 
 const AdminDashboard = () => {
   const [active, setActive] = useState("Dashboard");
@@ -100,7 +101,7 @@ const AdminDashboard = () => {
         <div style={{ paddingTop: "60px" }}>
           {active === "Dashboard" && <h2 style={{ fontSize: "24px", fontWeight: "bold" }}>Welcome to the Dashboard</h2>}
           {active === "Search" && <h2 style={{ fontSize: "24px", fontWeight: "bold" }}>Search Section</h2>}
-          {active === "Broadcast Message" && <h2 style={{ fontSize: "24px", fontWeight: "bold" }}>Send Broadcast Messages</h2>}
+          {active === "Broadcast Message" && <Broadcast />} {/* Render Broadcast component */}
           {active === "Report" && <h2 style={{ fontSize: "24px", fontWeight: "bold" }}>Reports & Analytics</h2>}
         </div>
       </div>
