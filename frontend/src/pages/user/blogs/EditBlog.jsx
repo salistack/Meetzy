@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import "./EditBlog.css"; // Import CSS
 
 const EditBlog = () => {
     const { id } = useParams();
@@ -71,7 +72,7 @@ const EditBlog = () => {
     };
 
     return (
-        <div>
+        <div className="edit-blog-container">
             <h2>Edit Blog</h2>
             <form onSubmit={handleSubmit}>
                 <input type="text" name="title" value={formData.title} disabled />
@@ -82,13 +83,8 @@ const EditBlog = () => {
                     <option value="Travel">Travel</option>
                     <option value="Education">Education</option>
                 </select>
-
                 <input type="text" name="photo" value={formData.photo} disabled />
-
-                {/* Editable fields */}
                 <textarea name="description" value={formData.description} placeholder="Short Description" onChange={handleChange} required></textarea>
-              
-
                 <button type="submit">Update Blog</button>
             </form>
         </div>

@@ -22,7 +22,7 @@ app.use(cors());
 
 app.use(express.json()); // Middleware to parse JSON
 
-// ✅ Apply routes AFTER CORS middleware
+//Apply routes AFTER CORS middleware
 app.use("/api/blogs", blogRoutes);
 app.use("/api/broadcasts", broadcastRoutes);
 

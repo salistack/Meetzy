@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
-import './BlogDetails.css'; // Add this at the top
-
+import { useParams, useNavigate } from "react-router-dom";
+import './BlogDetails.css'; // Import the CSS file
 
 const BlogDetails = () => {
     const { id } = useParams();
-    const navigate = useNavigate(); //  Initialize navigation
+    const navigate = useNavigate();
     const [blog, setBlog] = useState(null);
 
     useEffect(() => {
@@ -36,7 +35,7 @@ const BlogDetails = () => {
 
             if (response.ok) {
                 alert("Blog deleted successfully!");
-                navigate("/user/blogs"); //  Redirect to the blogs list
+                navigate("/user/blogs");
             } else {
                 alert("Failed to delete blog.");
             }
@@ -48,30 +47,20 @@ const BlogDetails = () => {
     if (!blog) return <p>Loading...</p>;
 
     return (
-        <div>
+        <div className="blog-details-container">
             <h2>{blog.title}</h2>
             <p>By {blog.authorName}</p>
-            <img src={blog.photo || "https://placehold.co/300"} alt={blog.title} />
+            <img src={blog.photo || "https://placehold.co/600"} alt={blog.title} />
+            <p className="description">{blog.description}</p>
 
-           
-            <p>{blog.description}</p>
-
-            {/* Edit and Delete Buttons */}
-            <button 
-                onClick={() => navigate(`/user/blogs/edit/${id}`)} 
-                className="edit-button"
-                style={{ marginRight: "10px", padding: "8px 12px", cursor: "pointer" }}
-            >
-                Edit
-            </button>
-
-            <button 
-                onClick={handleDelete} 
-                className="delete-button"
-                style={{ padding: "8px 12px", cursor: "pointer", backgroundColor: "red", color: "white" }}
-            >
-                Delete
-            </button>
+            <div className="button-group">
+                <button onClick={() => navigate(`/user/blogs/edit/${id}`)} className="edit-button">
+                    Edit
+                </button>
+                <button onClick={handleDelete} className="delete-button">
+                    Delete
+                </button>
+            </div>
         </div>
     );
 };
