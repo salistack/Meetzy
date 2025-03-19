@@ -6,6 +6,7 @@ import Blogs from "./pages/user/blogs/Blogs.jsx";
 import BlogDetails from "./pages/user/blogs/BlogDetails.jsx";
 import CreateBlog from "./pages/user/blogs/CreateBlog.jsx";
 import EditBlog from "./pages/user/blogs/EditBlog.jsx"; 
+import AdminDashboard from "./components/admin/AdminDashboard.jsx";
 
 
 
@@ -19,7 +20,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/user/blogs/create" element={<CreateBlog />} />
         <Route path="/user/blogs/:id" element={<BlogDetails />} />
         <Route path="/user/blogs/edit/:id" element={<EditBlog />} />
-
+        <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
       </Routes>
     </Router>
   </StrictMode>

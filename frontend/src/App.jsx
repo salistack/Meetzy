@@ -10,7 +10,7 @@ function App() {
       <Header />
 
       <div className="dashboard-container">
-        <button className="admin-button" onClick={() => navigate("/admin")}>
+        <button className="admin-button" onClick={() => navigate("/admin/AdminDashboard")}>
           Go to Admin Panel
         </button>
       </div>
