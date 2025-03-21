@@ -7,6 +7,7 @@ import BlogDetails from "./pages/user/blogs/BlogDetails.jsx";
 import CreateBlog from "./pages/user/blogs/CreateBlog.jsx";
 import EditBlog from "./pages/user/blogs/EditBlog.jsx"; 
 import AdminDashboard from "./components/admin/AdminDashboard.jsx";
+import './index.css';
 
 
 
