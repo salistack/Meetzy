@@ -3,11 +3,20 @@ const mongoose = require("mongoose");
 const connectDB = require("./config/db.js");
 const dotenv = require("dotenv");
 const cors = require("cors");
+<<<<<<< HEAD
 const multer = require("multer");
 const path = require("path");
 
 const broadcastRoutes = require("./routes/BroadcastRoutes");
 const blogRoutes = require("./routes/BlogRoutes");
+=======
+const path = require("path"); 
+
+const broadcastRoutes = require("./routes/BroadcastRoutes");
+const blogRoutes = require("./routes/BlogRoutes"); // Import routes
+const userRoutes = require("./routes/UserRoutes.js");
+const groupRoutes = require("./routes/GroupRoutes");
+>>>>>>> c25b943c9af04e5b14a2f8afb7fd92185b1d969d
 
 dotenv.config();
 connectDB();
@@ -25,8 +34,14 @@ app.use(cors({
 // Serve uploaded images statically
 app.use("/uploads/blogs", express.static(path.join(__dirname, "uploads", "blogs")));
 
+<<<<<<< HEAD
 //  Middleware to parse JSON
 app.use(express.json());
+=======
+app.use(express.json()); // Middleware to parse JSON
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Updated path
+
+>>>>>>> c25b943c9af04e5b14a2f8afb7fd92185b1d969d
 
 // Multer Storage Setup
 const storage = multer.diskStorage({
@@ -51,6 +66,9 @@ app.post("/api/upload", upload.single("photo"), (req, res) => {
 // Apply routes
 app.use("/api/blogs", blogRoutes);
 app.use("/api/broadcasts", broadcastRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/groups", groupRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 

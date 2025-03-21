@@ -1,23 +1,7 @@
-/* index.css */
+@import "tailwindcss";/* index.css */
 
-/* Reset margin and padding for all elements */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Ensure the body takes up full height of the viewport */
-html, body {
-  height: 100%;
-  display: flex;
-  justify-content: center; /* Centers horizontally */
-  align-items: center; /* Centers vertically */
-  font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
-}
-
-/* Optionally, center content inside #root div */
-#root {
-  text-align: center;
-}
+/* Add any custom styles below */
