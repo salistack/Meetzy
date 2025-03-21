@@ -59,7 +59,7 @@ function App() {
       </div>
 
       <div className="group">
-        <button className="group-button" onClick={() => navigate("/group")}>
+        <button className="group-button" onClick={() => navigate("/user/groups")}>
           Group Panel
         </button>
       </div>
