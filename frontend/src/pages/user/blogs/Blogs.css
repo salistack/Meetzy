@@ -1,3 +1,87 @@
+/* Default light mode styles */
+:root {
+    --bg-color: #fff;
+    --text-color: #222;
+    --button-bg: #007bff;
+    --button-hover: #0056b3;
+    --delete-bg: red;
+    --delete-hover: darkred;
+}
+
+/* Dark mode styles */
+[data-theme="dark"] {
+    --bg-color: #121212;
+    --text-color: #f5f5f5;
+    --button-bg: #1e90ff;
+    --button-hover: #0073e6;
+    --delete-bg: #ff4444;
+    --delete-hover: #cc0000;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Center the form */
+.create-blog-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+}
+
+/* Form Header */
+.create-blog-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Style inputs & textarea */
+.create-blog-container input,
+.create-blog-container textarea,
+.create-blog-container select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Style text area */
+.create-blog-container textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Style select dropdown */
+.create-blog-container select {
+    cursor: pointer;
+}
+
+/* Submit button */
+.create-blog-container button {
+    width: 100%;
+    padding: 12px;
+    background: #4CAF50;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.create-blog-container button:hover {
+    background: #45a049;
+}
+
 /* Container styles */
 .blogs-container {
     max-width: 1000px;
@@ -14,6 +98,68 @@
     margin-bottom: 20px;
 }
 
+/* Search & Filter Bar */
+.search-filter-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Search Box */
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Search Icon */
+.search-icon {
+    position: absolute;
+    left: 10px;
+    font-size: 16px;
+    color: #777;
+    pointer-events: none; /* Prevent interaction with the icon */
+}
+
+/* Search Input */
+.search-box input {
+    padding: 10px 10px 10px 35px; /* Extra left padding for icon */
+    width: 650px;  /* Increased width */
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+/* Hover Effect on Search Input */
+.search-box input:hover {
+    border-color: #008CBA;  /* Change the border color on hover */
+    background-color: #f0f0f0;  /* Optional: Change background color on hover */
+}
+
+/* Focus Effect on Search Input */
+.search-box input:focus {
+    border-color: #008CBA;
+    outline: none;
+}
+
+/* Dropdown */
+.search-filter-bar select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.search-filter-bar select:hover {
+    border-color: #008CBA;
+}
+
 /* Create Blog Button */
 .create-blog-button {
     background-color: #008CBA;
@@ -23,39 +169,50 @@
     cursor: pointer;
     border-radius: 5px;
     font-size: 16px;
-    transition: 0.3s;
+    transition: background-color 0.3s ease, transform 0.2s ease-in-out;
 }
 
+/* Hover Effect with Animation */
 .create-blog-button:hover {
     background-color: #0073a5;
+    transform: scale(1.05); /* Slightly enlarges the button on hover */
+}
+
+/* Active (Click) Effect */
+.create-blog-button:active {
+    transform: scale(0.95); /* Slightly shrinks the button when clicked */
 }
 
 /* Blog Grid Layout */
 .blog-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));  /* Ensure responsive grid */
     gap: 20px;
-    justify-content: center;
+    justify-items: center;
     margin-top: 20px;
 }
 
 /* Blog Card */
 .blog-card {
-    background: #fff;
+    background:aqua;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    padding: 15px;
+    padding: 5px;
     border-radius: 10px;
     text-align: center;
     transition: transform 0.3s ease-in-out;
+    width: 100%;
+    max-width: 320px;  /* Restricts blog card width */
+    margin: auto; /* Centers single blog card */
 }
 
 .blog-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-10px);
 }
 
 /* Blog Image */
 .blog-card img {
     width: 100%;
+    max-width: 100%; /* Ensures image doesn’t stretch beyond the card */
     height: 200px;
     object-fit: cover;
     border-radius: 10px;
@@ -65,7 +222,7 @@
 /* Blog Title */
 .blog-card h3 {
     font-size: 22px;
-    color: #333;
+    color:black;
     margin-bottom: 5px;
 }
 
@@ -89,4 +246,49 @@
 
 .blog-card a:hover {
     background-color: #218838;
+}
+
+/* Dark Mode Toggle Button */
+.dark-mode-toggle {
+    background: var(--button-bg);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.dark-mode-toggle:hover {
+    background-color: var(--button-hover);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .blogs-container {
+        padding: 15px;
+    }
+
+    .blogs-container h2 {
+        font-size: 24px;
+    }
+
+    .search-box input {
+        width: 100%;  /* Full-width on smaller screens */
+    }
+
+    .create-blog-button {
+        width: 100%;
+    }
+
+    .blog-grid {
+        grid-template-columns: 1fr;  /* Stack blog cards on small screens */
+        gap: 15px;  /* Reduce the gap between cards on smaller screens */
+    }
+
+    .blog-card {
+        max-width: none;  /* Allow the blog cards to take up the full width on small screens */
+    }
 }

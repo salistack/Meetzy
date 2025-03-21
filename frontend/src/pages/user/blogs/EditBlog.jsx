@@ -5,7 +5,7 @@ import "./EditBlog.css"; // Import CSS
 const EditBlog = () => {
     const { id } = useParams();
     const [formData, setFormData] = useState({
-        title: "",
+        title: "", 
         authorName: "",
         description: "",
         content: "",

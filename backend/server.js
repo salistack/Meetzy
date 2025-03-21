@@ -3,26 +3,52 @@ const mongoose = require("mongoose");
 const connectDB = require("./config/db.js");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const multer = require("multer");
+const path = require("path");
+
 const broadcastRoutes = require("./routes/BroadcastRoutes");
-const blogRoutes = require("./routes/BlogRoutes"); // Import routes
+const blogRoutes = require("./routes/BlogRoutes");
 
 dotenv.config();
 connectDB();
 
 const app = express();
 
-// ✅ Allow frontend requests from localhost:5173 BEFORE routes
+// ✅ Allow frontend requests from localhost:5173
 app.use(cors({
-  origin: "http://localhost:5173", 
-  methods: ["GET", "POST", "PUT", "DELETE"], 
-  allowedHeaders: ["Content-Type"]
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type"],
+  credentials: true,
 }));
 
-app.use(cors());
+// Serve uploaded images statically
+app.use("/uploads/blogs", express.static(path.join(__dirname, "uploads", "blogs")));
 
-app.use(express.json()); // Middleware to parse JSON
+//  Middleware to parse JSON
+app.use(express.json());
 
-//Apply routes AFTER CORS middleware
+// Multer Storage Setup
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/blogs/"); // ✅ Corrected path
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
+
+//  Image Upload Route
+app.post("/api/upload", upload.single("photo"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+  res.json({ imageUrl: `/uploads/blogs/${req.file.filename}` }); // ✅ Corrected URL
+});
+
+// Apply routes
 app.use("/api/blogs", blogRoutes);
 app.use("/api/broadcasts", broadcastRoutes);
 
