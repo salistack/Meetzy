@@ -3,30 +3,72 @@ const mongoose = require("mongoose");
 const connectDB = require("./config/db.js");
 const dotenv = require("dotenv");
 const cors = require("cors");
+<<<<<<< HEAD
+const multer = require("multer");
+const path = require("path");
+
+const broadcastRoutes = require("./routes/BroadcastRoutes");
+const blogRoutes = require("./routes/BlogRoutes");
+=======
+const path = require("path"); 
+
 const broadcastRoutes = require("./routes/BroadcastRoutes");
 const blogRoutes = require("./routes/BlogRoutes"); // Import routes
 const userRoutes = require("./routes/UserRoutes.js");
+const groupRoutes = require("./routes/GroupRoutes");
+>>>>>>> c25b943c9af04e5b14a2f8afb7fd92185b1d969d
 
 dotenv.config();
 connectDB();
 
 const app = express();
 
-// ✅ Allow frontend requests from localhost:5173 BEFORE routes
+// ✅ Allow frontend requests from localhost:5173
 app.use(cors({
-  origin: "http://localhost:5173", 
-  methods: ["GET", "POST", "PUT", "DELETE"], 
-  allowedHeaders: ["Content-Type"]
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type"],
+  credentials: true,
 }));
 
-app.use(cors());
+// Serve uploaded images statically
+app.use("/uploads/blogs", express.static(path.join(__dirname, "uploads", "blogs")));
 
+<<<<<<< HEAD
+//  Middleware to parse JSON
+app.use(express.json());
+=======
 app.use(express.json()); // Middleware to parse JSON
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Updated path
 
-//Apply routes AFTER CORS middleware
+>>>>>>> c25b943c9af04e5b14a2f8afb7fd92185b1d969d
+
+// Multer Storage Setup
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/blogs/"); // ✅ Corrected path
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
+
+//  Image Upload Route
+app.post("/api/upload", upload.single("photo"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+  res.json({ imageUrl: `/uploads/blogs/${req.file.filename}` }); // ✅ Corrected URL
+});
+
+// Apply routes
 app.use("/api/blogs", blogRoutes);
 app.use("/api/broadcasts", broadcastRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/groups", groupRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 

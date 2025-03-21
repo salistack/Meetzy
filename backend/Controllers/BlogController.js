@@ -1,15 +1,25 @@
 const Blog = require("../models/BlogModel.js");
 
-// Create a Blog
+// ✅ Create a Blog
 const createBlog = async (req, res) => {
   try {
-    const { title, authorName, description, category, photo } = req.body;
+    const { title, authorName, description, category } = req.body;
+    const photo = req.file ? `/uploads/blogs/${req.file.filename}` : null; // ✅ Save uploaded image path
+
     if (!title || !authorName || !description || !category) {
-      return res
-        .status(400)
-        .json({ message: "All fields are required: title, authorName, description, category" });
+      return res.status(400).json({ message: "All fields are required: title, authorName, description, category" });
     }
-    const newBlog = new Blog({ title, authorName, description, category, photo });
+
+    const newBlog = new Blog({ 
+      title, 
+      authorName, 
+      description, 
+      category, 
+      photo, 
+      totalRating: 0,  // ✅ Initialize rating fields
+      ratingCount: 0 
+    });
+
     const blog = await newBlog.save();
     res.status(201).json(blog);
   } catch (error) {
@@ -17,40 +27,35 @@ const createBlog = async (req, res) => {
   }
 };
 
-// // Get All Blogs
-// const getAllBlogs = async (req, res) => {
-//   try {
-//     const blogs = await Blog.find().sort({ createdAt: -1 });
-//     res.status(200).json({ count: blogs.length, blogs });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
- const getAllBlogs = async (req, res) => {
+// ✅ Get All Blogs
+const getAllBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find();
-    res.json(blogs); // ✅ Directly send an array
-} catch (error) {
+    res.json(blogs);
+  } catch (error) {
     res.status(500).json({ message: "Server error" });
-}
-};   
+  }
+};
 
-// Get a Single Blog by ID
+// ✅ Get a Single Blog by ID
 const getBlogById = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ message: "Blog not found" });
-    res.status(200).json(blog);
+
+    const averageRating = blog.ratingCount > 0 ? (blog.totalRating / blog.ratingCount).toFixed(1) : "No ratings yet"; // ✅ Calculate average rating
+    res.status(200).json({ ...blog.toObject(), averageRating });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Update a Blog
+// ✅ Update a Blog
 const updateBlog = async (req, res) => {
   try {
-    const { title, authorName, description, category, photo } = req.body;
+    const { title, authorName, description, category } = req.body;
+    const photo = req.file ? `/uploads/blogs/${req.file.filename}` : req.body.photo; // ✅ Update image if new one is uploaded
+
     if (!title || !authorName || !description || !category) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -74,7 +79,7 @@ const updateBlog = async (req, res) => {
   }
 };
 
-// Delete a Blog
+// ✅ Delete a Blog
 const deleteBlog = async (req, res) => {
   try {
     const deletedBlog = await Blog.findByIdAndDelete(req.params.id);
@@ -85,4 +90,30 @@ const deleteBlog = async (req, res) => {
   }
 };
 
-module.exports = { createBlog, getAllBlogs, getBlogById, updateBlog, deleteBlog };
+// ✅ Rate a Blog
+const rateBlog = async (req, res) => {
+  const { id } = req.params;
+  const { rating } = req.body;
+
+  if (rating < 1 || rating > 5) {
+    return res.status(400).json({ message: "Rating must be between 1 and 5" });
+  }
+
+  try {
+    const blog = await Blog.findById(id);
+    if (!blog) return res.status(404).json({ message: "Blog not found" });
+
+    blog.totalRating += rating;
+    blog.ratingCount += 1;
+    await blog.save();
+
+    res.json({ 
+      message: "Rating added successfully!", 
+      averageRating: (blog.totalRating / blog.ratingCount).toFixed(1) 
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+module.exports = { createBlog, getAllBlogs, getBlogById, updateBlog, deleteBlog, rateBlog };
