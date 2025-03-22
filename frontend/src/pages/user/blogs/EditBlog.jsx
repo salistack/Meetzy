@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-
 const EditBlog = () => {
     const { id } = useParams();
     const [formData, setFormData] = useState({
@@ -81,8 +80,8 @@ const EditBlog = () => {
                             type="text" 
                             name="title" 
                             value={formData.title} 
-                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-100 cursor-not-allowed" 
-                            disabled 
+                            onChange={handleChange} 
+                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                     </div>
                     <div className="mb-4">
@@ -90,16 +89,16 @@ const EditBlog = () => {
                             type="text" 
                             name="authorName" 
                             value={formData.authorName} 
-                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-100 cursor-not-allowed" 
-                            disabled 
+                            onChange={handleChange} 
+                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                     </div>
                     <div className="mb-4">
                         <select 
                             name="category" 
                             value={formData.category} 
-                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-100 cursor-not-allowed" 
-                            disabled
+                            onChange={handleChange} 
+                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         >
                             <option value="loneliness">Loneliness</option>
                             <option value="Health">Health</option>
@@ -112,8 +111,8 @@ const EditBlog = () => {
                             type="text" 
                             name="photo" 
                             value={formData.photo} 
-                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-100 cursor-not-allowed" 
-                            disabled 
+                            onChange={handleChange} 
+                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                     </div>
                     <div className="mb-4">

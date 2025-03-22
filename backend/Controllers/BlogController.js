@@ -1,10 +1,10 @@
 const Blog = require("../models/BlogModel.js");
 
-// ✅ Create a Blog
+//  Create a Blog
 const createBlog = async (req, res) => {
   try {
     const { title, authorName, description, category } = req.body;
-    const photo = req.file ? `/uploads/blogs/${req.file.filename}` : null; // ✅ Save uploaded image path
+    const photo = req.file ? `/uploads/blogs/${req.file.filename}` : null; //  Save uploaded image path
 
     if (!title || !authorName || !description || !category) {
       return res.status(400).json({ message: "All fields are required: title, authorName, description, category" });
@@ -16,7 +16,7 @@ const createBlog = async (req, res) => {
       description, 
       category, 
       photo, 
-      totalRating: 0,  // ✅ Initialize rating fields
+      totalRating: 0,  //  Initialize rating fields
       ratingCount: 0 
     });
 
@@ -27,7 +27,7 @@ const createBlog = async (req, res) => {
   }
 };
 
-// ✅ Get All Blogs
+//  Get All Blogs
 const getAllBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find();
@@ -37,7 +37,7 @@ const getAllBlogs = async (req, res) => {
   }
 };
 
-// ✅ Get a Single Blog by ID
+//  Get a Single Blog by ID
 const getBlogById = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
@@ -50,7 +50,7 @@ const getBlogById = async (req, res) => {
   }
 };
 
-// ✅ Update a Blog
+//  Update a Blog
 const updateBlog = async (req, res) => {
   try {
     const { title, authorName, description, category } = req.body;
@@ -79,7 +79,7 @@ const updateBlog = async (req, res) => {
   }
 };
 
-// ✅ Delete a Blog
+//  Delete a Blog
 const deleteBlog = async (req, res) => {
   try {
     const deletedBlog = await Blog.findByIdAndDelete(req.params.id);
