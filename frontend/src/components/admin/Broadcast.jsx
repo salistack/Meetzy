@@ -21,8 +21,23 @@ const Broadcast = () => {
     }
   };
 
+  const validateMessage = (message) => {
+    const wordCount = message.trim().split(/\s+/).length;
+    if (wordCount < 25) {
+      alert("Message must contain at least 25 words.");
+      return false;
+    }
+    if (wordCount > 150) {
+      alert("Message cannot exceed 150 words.");
+      return false;
+    }
+    return true;
+  };
+
+  //validation part
   const handleCreate = async () => {
     if (!newMessage.trim()) return alert("Message cannot be empty!");
+    if (!validateMessage(newMessage)) return;
     try {
       const response = await axios.post(`${API_BASE_URL}/broadcasts`, { message: newMessage });
       setMessages([response.data, ...messages]);
@@ -32,8 +47,12 @@ const Broadcast = () => {
     }
   };
 
+
+  //validation part
+
   const handleUpdate = async (id) => {
     if (!editMessage.text.trim()) return alert("Message cannot be empty!");
+    if (!validateMessage(editMessage.text)) return;
     try {
       const response = await axios.put(`${API_BASE_URL}/broadcasts/${id}`, { message: editMessage.text });
       setMessages(messages.map((msg) => (msg._id === id ? response.data.broadcast : msg)));

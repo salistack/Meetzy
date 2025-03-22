@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Added for navigation
 
 const SignupPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate(); // Initialize navigation
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -21,6 +23,7 @@ const SignupPage = () => {
         password,
       });
       console.log("Signup successful:", response.data);
+      navigate("/"); // Navigate to home page after successful signup
     } catch (err) {
       setError(err.response?.data?.message || "Signup failed");
     }
@@ -62,6 +65,17 @@ const SignupPage = () => {
         >
           Signup
         </button>
+        <p className="text-center text-sm text-gray-600 mt-4">
+          Do you have an account?{" "}
+          <button
+            type="button"
+            onClick={() => navigate("/login")} // Navigate to login page
+            className="text-blue-500 hover:underline"
+          >
+            Login
+          </button>
+        </p>
+        
       </form>
     </div>
   );

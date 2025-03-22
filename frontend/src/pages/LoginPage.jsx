@@ -27,7 +27,7 @@ const LoginPage = () => {
       if (email === "meetzyadmin@gmail.com" && password === "meetzyadmin@gmail.com") {
         navigate("/AdminDashboard"); // Redirect to admin dashboard
       } else {
-        navigate("/user-dashboard"); // Redirect normal users
+        navigate("/"); // Redirect normal users
       }
       
     } catch (err) {
@@ -67,6 +67,18 @@ const LoginPage = () => {
           >
             Login
           </button>
+
+          <p className="text-center text-sm text-gray-600 mt-2">
+          Don't have an account?{" "}
+          <button
+            type="button"
+            onClick={() => navigate("/signup")} // Navigate to signup page
+            className="text-blue-500 hover:underline"
+          >
+            Signup
+          </button>
+        </p>
+
         </form>
       </div>
     </div>
