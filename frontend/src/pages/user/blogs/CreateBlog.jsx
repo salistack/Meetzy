@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./CreateBlog.css";  // Import CSS
+import "./CreateBlog.css"; // Import CSS
 
 const CreateBlog = () => {
     const [formData, setFormData] = useState({
@@ -21,7 +21,21 @@ const CreateBlog = () => {
     };
 
     const handleFileChange = (e) => {
-        setPhoto(e.target.files[0]);
+        const file = e.target.files[0];
+
+        if (file && file.size > 2 * 1024 * 1024) { // 2MB limit
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                photo: "File size should be under 2MB.",
+            }));
+            setPhoto(null);
+        } else {
+            setErrors((prevErrors) => {
+                const { Photo, ...rest } = prevErrors; // Remove photo error if valid
+                return rest;
+            });
+            setPhoto(file);
+        }
     };
 
     const validateField = (name, value) => {
@@ -141,6 +155,8 @@ const CreateBlog = () => {
                 {errors.category && <p className="error">{errors.category}</p>}
 
                 <input type="file" accept="image/*" onChange={handleFileChange} />
+                <p className="file-info">File size should be under 2MB.</p> {/* Informing the user */}
+                {errors.photo && <p className="error">{errors.photo}</p>}
 
                 {photo && (
                     <div>
