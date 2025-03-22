@@ -10,6 +10,14 @@ import BlogDetails from "./pages/user/blogs/BlogDetails.jsx";
 import CreateBlog from "./pages/user/blogs/CreateBlog.jsx";
 import EditBlog from "./pages/user/blogs/EditBlog.jsx"; 
 import AdminDashboard from "./components/admin/AdminDashboard.jsx";
+import GroupsPage from "./pages/user/groups/GroupPage.jsx"; // Group Listing Page
+import CreateGroup from "./pages/user/groups/CreateGroup.jsx";
+import GroupDetails from "./pages/user/groups/GroupDetails.jsx";
+import UpdateGroup from "./pages/user/groups/UpdateGroup.jsx";
+import './index.css';
+import SignupPage from "./pages/SignupPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -24,6 +32,21 @@ createRoot(document.getElementById("root")).render(
         <Route path="/user/blogs/create" element={<CreateBlog />} />
         <Route path="/user/blogs/edit/:id" element={<EditBlog />} />
         <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
+        <Route path="/user/groups" element={<GroupsPage />} />  {/* List Groups */}
+        <Route path="/user/groups/create" element={<CreateGroup />} />  {/* Create Group */}
+        <Route path="/user/groups/:id" element={<GroupDetails />} />  {/* Group Details */}
+        <Route path="/user/groups/update/:id" element={<UpdateGroup />} /> 
+        <Route path="/signup" element={<SignupPage />} /> 
+        <Route path="/LoginPage" element={<LoginPage />} /> 
+        <Route path="/AdminDashboard" element={<AdminDashboard />} /> 
+        <Route path="/login" element={<LoginPage />} /> 
+        <Route path="/signup" element={<SignupPage />} /> 
+        <Route path="/reset-password" element={<ResetPasswordPage />} /> 
+
+        /reset-password
+        
+        
+
       </Routes>
     </Router>
   </StrictMode>

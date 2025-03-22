@@ -1,108 +1,76 @@
 import { useState } from "react";
 import { FiHome, FiSearch, FiSend, FiBarChart2, FiMenu, FiX } from "react-icons/fi";
-import Broadcast from "./Broadcast"; // Import the Broadcast component
+import Broadcast from "./Broadcast";
+import { useNavigate } from "react-router-dom";
+import ReportedBlogs from "./ReportedBlogs";
 
 const AdminDashboard = () => {
   const [active, setActive] = useState("Dashboard");
   const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
 
-  const styles = {
-    container: {
-      display: "flex",
-      height: "100vh",
-      backgroundColor: "#f3f4f6",
-    },
-    sidebar: {
-      width: "250px",
-      height: "100vh",
-      backgroundColor: "#111827",
-      color: "#fff",
-      padding: "20px",
-      position: "fixed",
-      transition: "transform 0.3s ease-in-out",
-      transform: isSidebarOpen ? "translateX(0)" : "translateX(-250px)",
-    },
-    sidebarItem: {
-      display: "flex",
-      alignItems: "center",
-      padding: "12px",
-      borderRadius: "5px",
-      cursor: "pointer",
-      transition: "0.3s",
-    },
-    active: {
-      backgroundColor: "#374151",
-    },
-    content: {
-      marginLeft: isSidebarOpen ? "300px" : "0", // Adjust margin based on sidebar state
-      padding: "20px",
-      transition: "margin-left 0.3s",
-      flex: 1,
-    },
-    mobileHeader: {
-      backgroundColor: "#fff",
-      padding: "15px",
-      boxShadow: "0px 2px 5px rgba(0,0,0,0.1)",
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      position: "fixed",
-      width: "100%",
-      top: 0,
-      zIndex: 1000,
-    },
+  const handleSignOut = () => {
+    localStorage.removeItem("token"); // Clear the token
+    navigate("/"); // Navigate to home
   };
 
   return (
-    <div style={styles.container}>
+    <div className="flex h-screen bg-white">
       {/* Sidebar */}
-      <div style={styles.sidebar}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-          <h1 style={{ fontSize: "20px", fontWeight: "bold" }}>Admin Panel</h1>
-          <button onClick={() => setSidebarOpen(false)} style={{ display: "none" }}>
+      <div
+        className={`fixed h-full bg-gray-800 text-white w-64 p-5 transition-transform transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-64"}`}
+      >
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-xl font-bold text-white">Admin Panel</h1>
+          <button onClick={() => setSidebarOpen(false)} className="lg:hidden">
             <FiX size={24} />
           </button>
         </div>
 
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          {[
-            { name: "Dashboard", icon: <FiHome />, section: "Dashboard" },
+        <ul className="space-y-4">
+          {[{ name: "Dashboard", icon: <FiHome />, section: "Dashboard" },
             { name: "Search", icon: <FiSearch />, section: "Search" },
             { name: "Broadcast Message", icon: <FiSend />, section: "Broadcast Message" },
-            { name: "Report", icon: <FiBarChart2 />, section: "Report" },
+            { name: "Reported blogs", icon: <FiBarChart2 />, section: "Reported blogs" }
           ].map((item, index) => (
             <li
               key={index}
-              style={{
-                ...styles.sidebarItem,
-                ...(active === item.section ? styles.active : {}),
-              }}
+              className={`flex items-center p-3 rounded-md cursor-pointer transition ${active === item.section ? "bg-gray-700" : "hover:bg-gray-700"}`}
               onClick={() => setActive(item.section)}
             >
               {item.icon}
-              <span style={{ marginLeft: "10px" }}>{item.name}</span>
+              <span className="ml-3">{item.name}</span>
             </li>
           ))}
         </ul>
       </div>
 
       {/* Main Content */}
-      <div style={styles.content}>
+      <div className={`flex-1 transition-all ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
         {/* Mobile Header */}
-        <div style={{ ...styles.mobileHeader, display: "none" }}>
-          <button onClick={() => setSidebarOpen(true)}>
+        <div className="bg-white p-4 shadow-md flex justify-between items-center lg:hidden fixed w-full top-0 z-50">
+          <button onClick={() => setSidebarOpen(true)} className="text-indigo-500 hover:text-indigo-700">
             <FiMenu size={24} />
           </button>
-          <h2 style={{ fontSize: "18px", fontWeight: "bold" }}>{active}</h2>
-          <div></div>
+          <h2 className="text-lg font-bold">{active}</h2>
+          <button onClick={handleSignOut} className="text-red-500 font-bold hover:text-red-700">
+            Sign Out
+          </button>
         </div>
 
         {/* Page Content */}
-        <div style={{ paddingTop: "60px" }}>
-          {active === "Dashboard" && <h2 style={{ fontSize: "24px", fontWeight: "bold" }}>Welcome to the Dashboard</h2>}
-          {active === "Search" && <h2 style={{ fontSize: "24px", fontWeight: "bold" }}>Search Section</h2>}
-          {active === "Broadcast Message" && <Broadcast />} {/* Render Broadcast component */}
-          {active === "Report" && <h2 style={{ fontSize: "24px", fontWeight: "bold" }}>Reports & Analytics</h2>}
+        <div className="p-6 pt-20 lg:pt-6">
+          {/* Desktop Header */}
+          <div className="hidden lg:flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold">{active}</h2>
+            <button onClick={handleSignOut} className="text-red-500 font-bold hover:text-red-700">
+              Sign Out
+            </button>
+          </div>
+          {active === "Dashboard" && <h2 className="text-2xl font-bold text-black">Welcome to the Dashboard</h2>}
+          {active === "Search" && <h2 className="text-2xl font-bold text-black">Search Section</h2>}
+          {active === "Broadcast Message" && <Broadcast />}
+          {active === "Reported blogs" && <ReportedBlogs />}
         </div>
       </div>
     </div>

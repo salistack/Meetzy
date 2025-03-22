@@ -1,31 +1,70 @@
-/* Centering the Blog Details Container */
+/* Default light mode styles */
+:root {
+    --bg-color: #fff;
+    --text-color: #222;
+    --button-bg: #007bff;
+    --button-hover: #0056b3;
+    --delete-bg: red;
+    --delete-hover: darkred;
+}
+
+/* Dark mode styles */
+[data-theme="dark"] {
+    --bg-color: #121212;
+    --text-color: #f5f5f5;
+    --button-bg: #1e90ff;
+    --button-hover: #0073e6;
+    --delete-bg: #ff4444;
+    --delete-hover: #cc0000;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Blog Details Container */
 .blog-details-container {
     max-width: 900px;
     margin: 0 auto;
     padding: 20px;
     font-family: 'Arial', sans-serif;
-    text-align: center; /* Centers everything inside */
+    text-align: center;
 }
 
 /* Blog Title */
 .blog-details-container h2 {
     font-size: 2.5rem;
     font-weight: bold;
-    color: #222;
+    color: var(--text-color);
     margin-bottom: 10px;
 }
 
-/* Author Name */
-.blog-details-container p {
-    font-size: 1.1rem;
-    color: #555;
-    margin-bottom: 15px;
+/* Dark Mode Toggle Button */
+.dark-mode-toggle {
+    background: var(--button-bg);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    position: absolute;
+    top: 20px; /* Adjust the distance from the top */
+    left: 20px; /* Adjust the distance from the left */
+    z-index: 10; /* Make sure it stays above other elements */
+}
+
+.dark-mode-toggle:hover {
+    background-color: var(--button-hover);
 }
 
 /* Blog Image */
 .blog-details-container img {
-    width: 400%;
-    max-width: 400px;
+    width: 100%;
+    max-width: 900px;
     height: auto;
     border-radius: 8px;
     margin: 15px 0;
@@ -36,18 +75,13 @@
 .blog-details-container .description {
     font-size: 1.1rem;
     line-height: 1.6;
-    color: #444;
+    color: var(--text-color);
     margin-bottom: 20px;
-}
-
-/* Buttons Container */
-.button-group {
-    margin-top: 20px;
 }
 
 /* Edit Button */
 .edit-button {
-    background-color: #007bff;
+    background-color: var(--button-bg);
     color: white;
     border: none;
     padding: 10px 15px;
@@ -59,12 +93,12 @@
 }
 
 .edit-button:hover {
-    background-color: #0056b3;
+    background-color: var(--button-hover);
 }
 
 /* Delete Button */
 .delete-button {
-    background-color: red;
+    background-color: var(--delete-bg);
     color: white;
     border: none;
     padding: 10px 15px;
@@ -75,7 +109,7 @@
 }
 
 .delete-button:hover {
-    background-color: darkred;
+    background-color: var(--delete-hover);
 }
 
 /* Responsive Design */

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import "./EditBlog.css"; // Import CSS
+
 
 const EditBlog = () => {
     const { id } = useParams();
     const [formData, setFormData] = useState({
-        title: "",
+        title: "", 
         authorName: "",
         description: "",
         content: "",
@@ -72,21 +72,68 @@ const EditBlog = () => {
     };
 
     return (
-        <div className="edit-blog-container">
-            <h2>Edit Blog</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="text" name="title" value={formData.title} disabled />
-                <input type="text" name="authorName" value={formData.authorName} disabled />
-                <select name="category" value={formData.category} disabled>
-                    <option value="loneliness">Loneliness</option>
-                    <option value="Health">Health</option>
-                    <option value="Travel">Travel</option>
-                    <option value="Education">Education</option>
-                </select>
-                <input type="text" name="photo" value={formData.photo} disabled />
-                <textarea name="description" value={formData.description} placeholder="Short Description" onChange={handleChange} required></textarea>
-                <button type="submit">Update Blog</button>
-            </form>
+        <div className="edit-blog-container bg-gradient-to-r from-indigo-600 to-purple-600 min-h-screen flex justify-center items-center py-8 px-4">
+            <div className="bg-white w-full max-w-lg p-8 rounded-md shadow-xl">
+                <h2 className="text-white text-3xl font-bold mb-6">Edit Blog</h2>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="mb-4">
+                        <input 
+                            type="text" 
+                            name="title" 
+                            value={formData.title} 
+                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-100 cursor-not-allowed" 
+                            disabled 
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <input 
+                            type="text" 
+                            name="authorName" 
+                            value={formData.authorName} 
+                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-100 cursor-not-allowed" 
+                            disabled 
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <select 
+                            name="category" 
+                            value={formData.category} 
+                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-100 cursor-not-allowed" 
+                            disabled
+                        >
+                            <option value="loneliness">Loneliness</option>
+                            <option value="Health">Health</option>
+                            <option value="Travel">Travel</option>
+                            <option value="Education">Education</option>
+                        </select>
+                    </div>
+                    <div className="mb-4">
+                        <input 
+                            type="text" 
+                            name="photo" 
+                            value={formData.photo} 
+                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-100 cursor-not-allowed" 
+                            disabled 
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <textarea 
+                            name="description" 
+                            value={formData.description} 
+                            placeholder="Short Description" 
+                            onChange={handleChange} 
+                            required
+                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                    </div>
+                    <button 
+                        type="submit" 
+                        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-md shadow-md hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-500 transition duration-300"
+                    >
+                        Update Blog
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };

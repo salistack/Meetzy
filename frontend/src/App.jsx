@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react"; // Import useState and useEf
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios"; // Import axios
 import Header from "./Components/Header"; 
-import CreateProfile from "./pages/user/profile/CreateProfile";
 
 function App() {
   const navigate = useNavigate(); // Initialize navigation
@@ -24,6 +23,7 @@ function App() {
   return (
     <>
       <Header />
+      <Home />
 
       <div className="broadcast-messages" style={{ textAlign: "center", margin: "20px 0" }}>
         <h2
@@ -35,30 +35,19 @@ function App() {
             textTransform: "uppercase",
           }}
         >
-          Broadcast Messages
+          
         </h2>
         {broadcastMessages.length > 0 ? (
           broadcastMessages.map((msg) => (
             <div
               key={msg._id}
-              style={{
-                display: "inline-block",
-                border: "5px solid red",
-                borderRadius: "10px",
-                padding: "5px",
-                marginBottom: "5px",
-                backgroundColor: "#ffe6e6",
-                textAlign: "center",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                animation: "fadeIn 3s ease-in-out, blinkBorder 10s infinite alternate"
-              }}
-              
+              className="inline-block border-4 border-red-500 rounded-lg p-2 mb-2 bg-red-100 text-center shadow-lg animate-fadeIn"
             >
-              <p style={{ fontSize: "18px", fontWeight: "500", color: "#333" }}>{msg.message}</p>
+              <p className="text-lg font-medium text-gray-800">{msg.message}</p>
             </div>
           ))
         ) : (
-          <p style={{ fontSize: "16px", color: "#666" }}>No broadcast messages</p>
+          <p style={{ fontSize: "16px", color: "#666" }}></p>
         )}
       </div>
 
@@ -75,7 +64,7 @@ function App() {
       </div>
 
       <div className="group">
-        <button className="group-button" onClick={() => navigate("/group")}>
+        <button className="group-button" onClick={() => navigate("/user/groups")}>
           Group Panel
         </button>
       </div>
