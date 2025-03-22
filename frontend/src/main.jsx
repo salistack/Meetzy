@@ -12,6 +12,8 @@ import CreateGroup from "./pages/user/groups/CreateGroup.jsx";
 import GroupDetails from "./pages/user/groups/GroupDetails.jsx";
 import UpdateGroup from "./pages/user/groups/UpdateGroup.jsx";
 import './index.css';
+import SignupPage from "./pages/SignupPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
 
 
 
@@ -29,7 +31,10 @@ createRoot(document.getElementById("root")).render(
         <Route path="/user/groups" element={<GroupsPage />} />  {/* List Groups */}
         <Route path="/user/groups/create" element={<CreateGroup />} />  {/* Create Group */}
         <Route path="/user/groups/:id" element={<GroupDetails />} />  {/* Group Details */}
-        <Route path="/user/groups/update/:id" element={<UpdateGroup />} />  
+        <Route path="/user/groups/update/:id" element={<UpdateGroup />} /> 
+        <Route path="/signup" element={<SignupPage />} /> 
+        <Route path="/LoginPage" element={<LoginPage />} /> 
+
       </Routes>
     </Router>
   </StrictMode>

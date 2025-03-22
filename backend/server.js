@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const connectDB = require("./config/db.js");
@@ -5,6 +6,8 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const path = require("path"); 
 const multer = require("multer");
+const authRoutes = require("./routes/loginAuthRoutes");
+
 
 const broadcastRoutes = require("./routes/BroadcastRoutes");
 const blogRoutes = require("./routes/BlogRoutes"); // Import routes
@@ -30,6 +33,8 @@ app.use("/uploads/blogs", express.static(path.join(__dirname, "uploads", "blogs"
 app.use(express.json()); // Middleware to parse JSON
 app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Updated path
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.json()); // Ensure JSON parsing middleware is applied
 
 // Multer Storage Setup
 const storage = multer.diskStorage({
@@ -56,7 +61,7 @@ app.use("/api/blogs", blogRoutes);
 app.use("/api/broadcasts", broadcastRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/groups", groupRoutes);
-
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 5000;
 
