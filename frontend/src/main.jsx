@@ -14,6 +14,7 @@ import UpdateGroup from "./pages/user/groups/UpdateGroup.jsx";
 import './index.css';
 import SignupPage from "./pages/SignupPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
 
 
 
@@ -37,8 +38,9 @@ createRoot(document.getElementById("root")).render(
         <Route path="/AdminDashboard" element={<AdminDashboard />} /> 
         <Route path="/login" element={<LoginPage />} /> 
         <Route path="/signup" element={<SignupPage />} /> 
+        <Route path="/reset-password" element={<ResetPasswordPage />} /> 
 
-
+        /reset-password
         
         
 

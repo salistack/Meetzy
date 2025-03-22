@@ -1,10 +1,17 @@
 import { useState } from "react";
 import { FiHome, FiSearch, FiSend, FiBarChart2, FiMenu, FiX } from "react-icons/fi";
 import Broadcast from "./Broadcast";
+import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
   const [active, setActive] = useState("Dashboard");
   const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token"); // Clear the token
+    navigate("/"); // Navigate to home
+  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -45,11 +52,20 @@ const AdminDashboard = () => {
             <FiMenu size={24} />
           </button>
           <h2 className="text-lg font-bold">{active}</h2>
-          <div></div>
+          <button onClick={handleSignOut} className="text-red-500 font-bold">
+            Sign Out
+          </button>
         </div>
 
         {/* Page Content */}
         <div className="p-6 pt-20 lg:pt-6">
+          {/* Desktop Header */}
+          <div className="hidden lg:flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold">{active}</h2>
+            <button onClick={handleSignOut} className="text-red-500 font-bold">
+              Sign Out
+            </button>
+          </div>
           {active === "Dashboard" && <h2 className="text-2xl font-bold">Welcome to the Dashboard</h2>}
           {active === "Search" && <h2 className="text-2xl font-bold">Search Section</h2>}
           {active === "Broadcast Message" && <Broadcast />}

@@ -5,39 +5,30 @@ const Header = () => {
   const navigate = useNavigate(); // Initialize useNavigate
 
   return (
-    <header className="bg-blue-600 text-white p-4 flex justify-between items-center">
-      <div className="text-2xl font-bold">Meetzy</div>
-      <nav className="flex space-x-4">
-        <a href="#" className="hover:underline">Create Group</a>
-        <a href="#" className="hover:underline">About Us</a>
-        <a href="#" className="hover:underline">FAQ</a>
-        <a href="#" className="hover:underline">Contact Us</a>
+    <header className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white p-6 flex justify-between items-center relative rounded-lg shadow-lg">
+      {/* Logo */}
+      <div className="text-3xl font-bold relative z-10 text-shadow-lg">Meetzy</div>
+      
+      {/* Navigation Menu */}
+      <nav className="flex space-x-8 relative z-10">
+        <Link to="#" className="hover:scale-105 transition-all duration-300">Create Group</Link>
+        <Link to="#" className="hover:scale-105 transition-all duration-300">Create Blog</Link>
+        <Link to="#" className="hover:scale-105 transition-all duration-300">About Us</Link>
+        <Link to="#" className="hover:scale-105 transition-all duration-300">FAQ</Link>
+        <Link to="#" className="hover:scale-105 transition-all duration-300">Contact Us</Link>
       </nav>
-      <div className="space-x-2">
+
+      {/* Sign In and Sign Up Buttons */}
+      <div className="space-x-4 relative z-10">
         <a href="/signup">
           <button
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded"
-            onClick={() => {
-              fetch("http://localhost:5000/api/auth/register", { // Updated to use the correct backend URL
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username: "testuser", password: "testpassword" }),
-              })
-                .then((response) => {
-                  if (!response.ok) {
-                    throw new Error("Failed to register");
-                  }
-                  return response.json();
-                })
-                .then((data) => console.log("Registration successful:", data))
-                .catch((error) => console.error("Error:", error));
-            }}
+            className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white py-2 px-6 rounded-full shadow-lg transition-transform duration-300 transform hover:scale-110"
           >
             Sign Up
           </button>
         </a>
         <button
-          className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded"
+          className="bg-gray-700 hover:bg-gray-800 text-white py-2 px-6 rounded-full shadow-lg transition-transform duration-300 transform hover:scale-110"
           onClick={() => navigate("/LoginPage")} // Navigate to LoginPage
         >
           Login

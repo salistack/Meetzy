@@ -31,7 +31,13 @@ const LoginPage = () => {
       }
       
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      const errorMessage = err.response?.data?.message || "Login failed";
+      
+      if (errorMessage.toLowerCase().includes("invalid credentials")) {
+        setError("Invalid password. Forgot your password?");
+      } else {
+        setError(errorMessage);
+      }
     }
   };
 
@@ -60,7 +66,20 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          {error && (
+            <p className="text-red-500 text-sm mb-4">
+              {error}{" "}
+              {error.toLowerCase().includes("invalid password") && (
+                <button
+                  type="button"
+                  onClick={() => navigate("/reset-password")} // Navigate to password reset page
+                  className="text-blue-500 hover:underline"
+                >
+                  Reset it here
+                </button>
+              )}
+            </p>
+          )}
           <button
             type="submit"
             className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
@@ -69,16 +88,15 @@ const LoginPage = () => {
           </button>
 
           <p className="text-center text-sm text-gray-600 mt-2">
-          Don't have an account?{" "}
-          <button
-            type="button"
-            onClick={() => navigate("/signup")} // Navigate to signup page
-            className="text-blue-500 hover:underline"
-          >
-            Signup
-          </button>
-        </p>
-
+            Don't have an account?{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/signup")} // Navigate to signup page
+              className="text-blue-500 hover:underline"
+            >
+              Signup
+            </button>
+          </p>
         </form>
       </div>
     </div>
