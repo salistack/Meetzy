@@ -8,8 +8,14 @@ const userSchema = new mongoose.Schema(
     nic: { type: String, required: true, unique: true },
     address: { type: String, required: true },
     phoneNumber: { type: String, required: true },
-    website: { type: String },
-    allInfo: { type: String }, // Optional field for extra info
+    interest: { type: String },
+    maritalStatus: {
+        type: String,
+        enum: ['Single', 'Married', 'Divorced', 'Widowed'], // Enum of possible statuses
+        required: false
+      }
+    
+      
   },
   {
     timestamps: true,

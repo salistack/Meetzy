@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"; // Import useState and useEf
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios"; // Import axios
 import Header from "./Components/Header"; 
+import CreateProfile from "./pages/user/profile/CreateProfile";
 
 function App() {
   const navigate = useNavigate(); // Initialize navigation
@@ -34,7 +35,7 @@ function App() {
             textTransform: "uppercase",
           }}
         >
-          
+          Broadcast Messages
         </h2>
         {broadcastMessages.length > 0 ? (
           broadcastMessages.map((msg) => (
@@ -57,7 +58,7 @@ function App() {
             </div>
           ))
         ) : (
-          <p style={{ fontSize: "16px", color: "#666" }}></p>
+          <p style={{ fontSize: "16px", color: "#666" }}>No broadcast messages</p>
         )}
       </div>
 
@@ -80,7 +81,7 @@ function App() {
       </div>
 
       <div className="profile">
-        <button className="profile-button" onClick={() => navigate("/profile")}>
+        <button className="profile-button" onClick={() => navigate("/create-profile")}>
           Profile Panel
         </button>
       </div>

@@ -1,0 +1,96 @@
+/* EditProfile.css */
+
+/* Global Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;  /* Centers the body content horizontally */
+  align-items: center;  /* Centers the body content vertically */
+}
+
+h2 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+form input,
+form select,
+form button {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+form input[type="date"] {
+  padding: 10px;
+}
+
+form select {
+  cursor: pointer;
+}
+
+form button {
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #0056b3;
+}
+
+/* Placeholder styling for inputs */
+input::placeholder {
+  color: #999;
+}
+
+/* Styles for select dropdown */
+select:focus,
+input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Styling for error messages */
+.error {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* Styling for responsiveness */
+@media (max-width: 600px) {
+  h2 {
+    font-size: 24px;
+  }
+
+  form {
+    padding: 15px;
+  }
+
+  form input,
+  form select,
+  form button {
+    font-size: 14px;
+  }
+}
