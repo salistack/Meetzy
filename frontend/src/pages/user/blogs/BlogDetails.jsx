@@ -9,6 +9,8 @@ const BlogDetails = () => {
     const [darkMode, setDarkMode] = useState(() => localStorage.getItem("theme") === "dark");
     const [rating, setRating] = useState(0);
     const [averageRating, setAverageRating] = useState(null);
+    const [showReportModal, setShowReportModal] = useState(false);
+    const [reportCategory, setReportCategory] = useState("");
 
     useEffect(() => {
         const fetchBlog = async () => {
@@ -68,6 +70,34 @@ const BlogDetails = () => {
         }
     };
 
+    const handleReportBlog = async () => {
+        if (!reportCategory) {
+            alert("Please select a category to report.");
+            return;
+        }
+
+        const url = `http://localhost:5000/api/blogs/${id}/report`;
+        console.log(`Reporting blog to: ${url}`); // Debugging log
+
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ category: reportCategory }),
+            });
+
+            if (response.ok) {
+                alert("Blog reported successfully!");
+                setShowReportModal(false);
+                setReportCategory("");
+            } else {
+                alert("Failed to report the blog.");
+            }
+        } catch (error) {
+            console.error("Error reporting blog:", error);
+        }
+    };
+
     // Dark mode toggle function
     const toggleDarkMode = () => {
         const newTheme = darkMode ? "light" : "dark";
@@ -124,10 +154,33 @@ const BlogDetails = () => {
                     Delete
                 </button>
 
-                <button onClick={() => alert("Blog reported successfully!")} className="report-button">
-                  Report
-               </button>
+                <button onClick={() => setShowReportModal(true)} className="report-button">
+                    Report
+                </button>
             </div>
+
+            {showReportModal && (
+                <div className="report-modal">
+                    <h3>Report Blog</h3>
+                    <p>Select a category:</p>
+                    <select
+                        value={reportCategory}
+                        onChange={(e) => setReportCategory(e.target.value)}
+                    >
+                        <option value="">--Select--</option>
+                        <option value="sex">Sex</option>
+                        <option value="terrorism">Terrorism</option>
+                        <option value="abuse">Abuse</option>
+                        <option value="hateSpeech">Hate Speech</option>
+                        <option value="fake">Fake</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <div className="modal-buttons">
+                        <button onClick={handleReportBlog}>Submit</button>
+                        <button onClick={() => setShowReportModal(false)}>Cancel</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

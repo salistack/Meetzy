@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiHome, FiSearch, FiSend, FiBarChart2, FiMenu, FiX } from "react-icons/fi";
 import Broadcast from "./Broadcast";
 import { useNavigate } from "react-router-dom";
+import ReportedBlogs from "./ReportedBlogs";
 
 const AdminDashboard = () => {
   const [active, setActive] = useState("Dashboard");
@@ -30,7 +31,7 @@ const AdminDashboard = () => {
           {[{ name: "Dashboard", icon: <FiHome />, section: "Dashboard" },
             { name: "Search", icon: <FiSearch />, section: "Search" },
             { name: "Broadcast Message", icon: <FiSend />, section: "Broadcast Message" },
-            { name: "Report", icon: <FiBarChart2 />, section: "Report" }
+            { name: "Reported blogs", icon: <FiBarChart2 />, section: "Reported blogs" }
           ].map((item, index) => (
             <li
               key={index}
@@ -69,7 +70,7 @@ const AdminDashboard = () => {
           {active === "Dashboard" && <h2 className="text-2xl font-bold">Welcome to the Dashboard</h2>}
           {active === "Search" && <h2 className="text-2xl font-bold">Search Section</h2>}
           {active === "Broadcast Message" && <Broadcast />}
-          {active === "Report" && <h2 className="text-2xl font-bold">Reports & Analytics</h2>}
+          {active === "Reported blogs" && <ReportedBlogs />}
         </div>
       </div>
     </div>
