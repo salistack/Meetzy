@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -14,12 +16,20 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", { // Ensure correct backend URL
+      const response = await axios.post("http://localhost:5000/api/auth/login", {
         email,
         password,
       });
+
       console.log("Login successful:", response.data);
-      // Handle successful login (e.g., save token, redirect)
+      
+      // Check if login credentials match the admin
+      if (email === "meetzyadmin@gmail.com" && password === "meetzyadmin@gmail.com") {
+        navigate("/AdminDashboard"); // Redirect to admin dashboard
+      } else {
+        navigate("/user-dashboard"); // Redirect normal users
+      }
+      
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }

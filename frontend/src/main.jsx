@@ -34,6 +34,8 @@ createRoot(document.getElementById("root")).render(
         <Route path="/user/groups/update/:id" element={<UpdateGroup />} /> 
         <Route path="/signup" element={<SignupPage />} /> 
         <Route path="/LoginPage" element={<LoginPage />} /> 
+        <Route path="/AdminDashboard" element={<AdminDashboard />} /> 
+        
 
       </Routes>
     </Router>
