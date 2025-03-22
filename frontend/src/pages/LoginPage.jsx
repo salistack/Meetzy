@@ -14,8 +14,12 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await axios.post("/api/auth/login", { email, password });
+      const response = await axios.post("http://localhost:5000/api/auth/login", { // Ensure correct backend URL
+        email,
+        password,
+      });
       console.log("Login successful:", response.data);
+      // Handle successful login (e.g., save token, redirect)
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }
