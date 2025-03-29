@@ -43,7 +43,7 @@ const getBlogById = async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ message: "Blog not found" });
 
-    const averageRating = blog.ratingCount > 0 ? (blog.totalRating / blog.ratingCount).toFixed(1) : "No ratings yet"; // ✅ Calculate average rating
+    const averageRating = blog.ratingCount > 0 ? (blog.totalRating / blog.ratingCount).toFixed(1) : "No ratings yet"; //  Calculate average rating
     res.status(200).json({ ...blog.toObject(), averageRating });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -54,7 +54,7 @@ const getBlogById = async (req, res) => {
 const updateBlog = async (req, res) => {
   try {
     const { title, authorName, description, category } = req.body;
-    const photo = req.file ? `/uploads/blogs/${req.file.filename}` : req.body.photo; // ✅ Update image if new one is uploaded
+    const photo = req.file ? `/uploads/blogs/${req.file.filename}` : req.body.photo; //  Update image if new one is uploaded
 
     if (!title || !authorName || !description || !category) {
       return res.status(400).json({ message: "All fields are required" });
@@ -90,7 +90,7 @@ const deleteBlog = async (req, res) => {
   }
 };
 
-// ✅ Rate a Blog
+//  Rate a Blog
 const rateBlog = async (req, res) => {
   const { id } = req.params;
   const { rating } = req.body;
