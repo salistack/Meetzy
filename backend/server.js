@@ -7,6 +7,7 @@ const cors = require("cors");
 const path = require("path"); 
 const multer = require("multer");
 const authRoutes = require("./routes/loginAuthRoutes");
+const reportRoutes = require("./routes/ReportRoutes");
 
 
 const broadcastRoutes = require("./routes/BroadcastRoutes");
@@ -62,6 +63,7 @@ app.use("/api/broadcasts", broadcastRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/groups", groupRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/reports", reportRoutes);
 
 const PORT = process.env.PORT || 5000;
 

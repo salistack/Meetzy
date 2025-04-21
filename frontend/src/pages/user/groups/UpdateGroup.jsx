@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import "./index.css";  // Assuming your CSS file
+import "./index.css";
+
 
 const UpdateGroup = () => {
   const [isLimited, setIsLimited] = useState(false);
@@ -14,11 +15,7 @@ const UpdateGroup = () => {
     image: null,
     imageUrl: "",
   });
-  const [previewImage, setPreviewImage] = useState(null);
-  const [error, setError] = useState(null);
-  const [imageSizeError, setImageSizeError] = useState(null);
 
-  const fileInputRef = useRef(null);
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -39,9 +36,6 @@ const UpdateGroup = () => {
           });
           setIsLimited(data.isLimited);
           setNumMembers(data.numMembers || "");
-          if (data.image) {
-            setPreviewImage(`http://localhost:5000${data.image}`);
-          }
         } else {
           alert("Failed to fetch group details.");
         }
@@ -53,74 +47,25 @@ const UpdateGroup = () => {
     fetchGroupDetails();
   }, [id]);
 
-  const handleToggle = useCallback(() => {
-    setIsLimited((prev) => !prev);
-    setNumMembers("");
-  }, []);
-
-  const handleChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  }, []);
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Validate file type and size
-      if (!file.type.startsWith("image/")) {
-        alert("Please upload a valid image file.");
-        fileInputRef.current.value = ''; // Reset file input value
-        return;
-      }
-      if (file.size > 2 * 1024 * 1024) { // 2MB
-        setImageSizeError("File size should not exceed 2MB.");
-        fileInputRef.current.value = ''; // Reset file input value
-        return;
-      }
-
-      setImageSizeError(null); // Clear previous error
-      setFormData((prev) => ({ ...prev, image: file }));
-      const reader = new FileReader();
-      reader.onloadend = () => setPreviewImage(reader.result);
-      reader.readAsDataURL(file);
-    }
+  const handleToggle = () => {
+    setIsLimited(!isLimited);
+    if (!isLimited) setNumMembers("");
   };
 
-  const handleImageCancel = () => {
-    setFormData((prev) => ({ ...prev, image: null }));
-    setPreviewImage(null);
-    setImageSizeError(null); // Clear image size error
-    fileInputRef.current.value = ''; // Reset file input value
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleFileChange = (e) => {
+    const { files } = e.target;
+    if (files && files[0]) {
+      setFormData({ ...formData, image: files[0] });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate the number of members if "Limited Members" is checked
-    if (isLimited && !numMembers) {
-      setError("Please specify the number of members.");
-      return;
-    }
-
-    // Get the current date and time
-    const now = new Date();
-
-    // Convert formData.startDateTime and formData.endDateTime to Date objects
-    const startDateTime = new Date(formData.startDateTime);
-    const endDateTime = new Date(formData.endDateTime);
-
-    // Validate startDateTime
-    if (startDateTime <= now) {
-      setError("Start date and time must be after the current time.");
-      return;
-    }
-
-    // Validate endDateTime
-    if (endDateTime <= startDateTime) {
-      setError("End date and time must be after the start date and time.");
-      return;
-    }
-
     try {
       const formDataToSend = new FormData();
       for (const key in formData) {
@@ -149,131 +94,121 @@ const UpdateGroup = () => {
       }
     } catch (err) {
       console.error("Error:", err);
-      setError(err.message); // Set the error message for display
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
-      <div className="bg-white/30 backdrop-blur-lg p-8 rounded-lg shadow-lg w-full max-w-lg">
-        <h2 className="text-3xl font-extrabold text-center text-white mb-6">Update Group</h2>
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        {imageSizeError && <p className="text-red-500 text-center mb-4">{imageSizeError}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Title Field */}
-          <div className="space-y-2">
-            <label className="text-white">Title:</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full px-4 py-2 bg-transparent border border-white/50 text-white rounded-lg focus:ring-2 focus:ring-yellow-400"
+    <div className="max-w-lg mx-auto mt-10 bg-white p-6 rounded-lg shadow-md">
+      <h2 className="text-2xl font-semibold text-center mb-6">Update Group</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block font-medium">Title:</label>
+          <input
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium">Location:</label>
+          <input
+            type="text"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium">Start Date & Time:</label>
+          <input
+            type="datetime-local"
+            name="startDateTime"
+            value={formData.startDateTime}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium">End Date & Time:</label>
+          <input
+            type="datetime-local"
+            name="endDateTime"
+            value={formData.endDateTime}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium">Description:</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium">Image:</label>
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="w-full p-2 border rounded-md"
+          />
+        </div>
+
+        {formData.imageUrl && (
+          <div className="mt-2">
+            <label className="block font-medium">Current Image:</label>
+            <img
+              src={`http://localhost:5000${formData.imageUrl}`}
+              alt="Group"
+              className="w-32 h-32 object-cover mt-2 rounded-md"
             />
           </div>
+        )}
 
-          {/* Location Field */}
-          <div className="space-y-2">
-            <label className="text-white">Location:</label>
+        <div className="flex items-center justify-between">
+          <label className="block font-medium">Limited Members:</label>
+          <label className="relative inline-flex cursor-pointer">
+            <input type="checkbox" checked={isLimited} onChange={handleToggle} className="sr-only peer" />
+            <div className="w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-blue-500 peer-checked:after:translate-x-full peer-checked:after:bg-white after:content-[''] after:absolute after:top-1/2 after:left-1 after:transform after:-translate-y-1/2 after:w-5 after:h-5 after:bg-gray-500 after:rounded-full after:transition"></div>
+          </label>
+        </div>
+
+        {isLimited && (
+          <div>
+            <label className="block font-medium">Number of Members:</label>
             <input
-              type="text"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              className="w-full px-4 py-2 bg-transparent border border-white/50 text-white rounded-lg focus:ring-2 focus:ring-yellow-400"
+              type="number"
+              name="numMembers"
+              min="1"
+              value={numMembers}
+              onChange={(e) => setNumMembers(e.target.value)}
+              className="w-full p-2 border rounded-md"
+              required
             />
           </div>
+        )}
 
-          {/* Start Date Time Field */}
-          <div className="space-y-2">
-            <label className="text-white">Start Date & Time:</label>
-            <input
-              type="datetime-local"
-              name="startDateTime"
-              value={formData.startDateTime}
-              onChange={handleChange}
-              className="w-full px-4 py-2 bg-transparent border border-white/50 text-white rounded-lg focus:ring-2 focus:ring-yellow-400"
-            />
-          </div>
-
-          {/* End Date Time Field */}
-          <div className="space-y-2">
-            <label className="text-white">End Date & Time:</label>
-            <input
-              type="datetime-local"
-              name="endDateTime"
-              value={formData.endDateTime}
-              onChange={handleChange}
-              className="w-full px-4 py-2 bg-transparent border border-white/50 text-white rounded-lg focus:ring-2 focus:ring-yellow-400"
-            />
-          </div>
-
-          {/* Description Field */}
-          <div className="space-y-2">
-            <label className="text-white">Description:</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className="w-full px-4 py-2 bg-transparent border border-white/50 text-white rounded-lg focus:ring-2 focus:ring-yellow-400"
-            ></textarea>
-          </div>
-
-          {/* File Upload Field */}
-          <div className="space-y-2">
-            <label className="text-white">Group Image:</label>
-            <input
-              type="file"
-              accept="image/*"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              className="w-full text-white bg-transparent border border-white/50 rounded-lg"
-            />
-            {previewImage && (
-              <div className="mt-2">
-                <p className="text-white">Preview:</p>
-                <img src={previewImage} alt="Preview" className="w-40 h-auto mt-2 rounded-md" />
-                <button onClick={handleImageCancel} className="mt-2 text-red-500">Cancel Image</button>
-              </div>
-            )}
-          </div>
-
-          {/* Limited Members Toggle */}
-          <div className="space-y-2">
-            <label className="text-white">
-              <input
-                type="checkbox"
-                checked={isLimited}
-                onChange={handleToggle}
-                className="mr-2"
-              />
-              Limited Members
-            </label>
-            {isLimited && (
-              <div className="space-y-2">
-                <label className="text-white">Number of Members:</label>
-                <input
-                  type="number"
-                  name="numMembers"
-                  value={numMembers}
-                  onChange={(e) => setNumMembers(e.target.value)}
-                  className="w-full px-4 py-2 bg-transparent border border-white/50 text-white rounded-lg focus:ring-2 focus:ring-yellow-400"
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Submit Button */}
-          <div className="flex justify-center mt-6">
-            <button
-              type="submit"
-              className="px-6 py-2 bg-yellow-500 text-white font-semibold rounded-lg focus:ring-2 focus:ring-yellow-400"
-            >
-              Update Group
-            </button>
-          </div>
-        </form>
-      </div>
+        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition">
+          Update Group
+        </button>
+      </form>
     </div>
   );
 };

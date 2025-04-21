@@ -20,24 +20,9 @@ const CreateBlog = () => {
     validateField(name, value);
   };
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-
-        if (file && file.size > 2 * 1024 * 1024) { // 2MB limit
-            setErrors((prevErrors) => ({
-                ...prevErrors,
-                photo: "File size should be under 2MB.",
-            }));
-            setPhoto(null);
-        } else {
-            setErrors((prevErrors) => {
-                const { Photo, ...rest } = prevErrors; // Remove photo error if valid
-                return rest;
-            });
-            setPhoto(file);
-        }
-    };
-  
+  const handleFileChange = (e) => {
+    setPhoto(e.target.files[0]);
+  };
 
   const validateField = (name, value) => {
     let newErrors = { ...errors };
@@ -177,9 +162,6 @@ const CreateBlog = () => {
             {errors.category && <p className="text-red-500 text-sm">{errors.category}</p>}
           </div>
 
-                <input type="file" accept="image/*" onChange={handleFileChange} />
-                <p className="file-info">File size should be under 2MB.</p> {/* Informing the user */}
-                {errors.photo && <p className="error">{errors.photo}</p>}
           {/* File Upload Field */}
           <div className="space-y-2">
             <input

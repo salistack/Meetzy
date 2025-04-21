@@ -1,10 +1,11 @@
 const Blog = require("../models/BlogModel.js");
+const Report = require("../models/ReportModel");
 
-//  Create a Blog
+// ✅ Create a Blog
 const createBlog = async (req, res) => {
   try {
     const { title, authorName, description, category } = req.body;
-    const photo = req.file ? `/uploads/blogs/${req.file.filename}` : null; //  Save uploaded image path
+    const photo = req.file ? `/uploads/blogs/${req.file.filename}` : null; // ✅ Save uploaded image path
 
     if (!title || !authorName || !description || !category) {
       return res.status(400).json({ message: "All fields are required: title, authorName, description, category" });
@@ -16,7 +17,7 @@ const createBlog = async (req, res) => {
       description, 
       category, 
       photo, 
-      totalRating: 0,  //  Initialize rating fields
+      totalRating: 0,  // ✅ Initialize rating fields
       ratingCount: 0 
     });
 
@@ -27,7 +28,7 @@ const createBlog = async (req, res) => {
   }
 };
 
-//  Get All Blogs
+// ✅ Get All Blogs
 const getAllBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find();
@@ -37,24 +38,24 @@ const getAllBlogs = async (req, res) => {
   }
 };
 
-//  Get a Single Blog by ID
+// ✅ Get a Single Blog by ID
 const getBlogById = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ message: "Blog not found" });
 
-    const averageRating = blog.ratingCount > 0 ? (blog.totalRating / blog.ratingCount).toFixed(1) : "No ratings yet"; //  Calculate average rating
+    const averageRating = blog.ratingCount > 0 ? (blog.totalRating / blog.ratingCount).toFixed(1) : "No ratings yet"; // ✅ Calculate average rating
     res.status(200).json({ ...blog.toObject(), averageRating });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-//  Update a Blog
+// ✅ Update a Blog
 const updateBlog = async (req, res) => {
   try {
     const { title, authorName, description, category } = req.body;
-    const photo = req.file ? `/uploads/blogs/${req.file.filename}` : req.body.photo; //  Update image if new one is uploaded
+    const photo = req.file ? `/uploads/blogs/${req.file.filename}` : req.body.photo; // ✅ Update image if new one is uploaded
 
     if (!title || !authorName || !description || !category) {
       return res.status(400).json({ message: "All fields are required" });
@@ -79,7 +80,7 @@ const updateBlog = async (req, res) => {
   }
 };
 
-//  Delete a Blog
+// ✅ Delete a Blog
 const deleteBlog = async (req, res) => {
   try {
     const deletedBlog = await Blog.findByIdAndDelete(req.params.id);
@@ -90,7 +91,7 @@ const deleteBlog = async (req, res) => {
   }
 };
 
-//  Rate a Blog
+// ✅ Rate a Blog
 const rateBlog = async (req, res) => {
   const { id } = req.params;
   const { rating } = req.body;
@@ -116,4 +117,43 @@ const rateBlog = async (req, res) => {
   }
 };
 
-module.exports = { createBlog, getAllBlogs, getBlogById, updateBlog, deleteBlog, rateBlog };
+
+
+// Report a blog
+const reportBlog = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { category, reportedBy } = req.body;
+
+    if (!category) {
+      return res.status(400).json({ message: "Category is required" });
+    }
+
+    const blog = await Blog.findById(id);
+    if (!blog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+    const newReport = new Report({
+      blogId: id,
+      reportedBy: reportedBy || "Anonymous",
+      category,
+    });
+
+    await newReport.save();
+
+    res.status(201).json({ message: "Blog reported successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { 
+  createBlog, 
+  getAllBlogs, 
+  getBlogById, 
+  updateBlog, 
+  deleteBlog, 
+  rateBlog,
+  reportBlog
+};

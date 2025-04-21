@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react"; // Import useState and useEffect
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios"; // Import axios
-import Header from "./Components/Header"; 
+import Header from "./components/Header"; 
+import Home from "./pages/user/Home";
+import './index.css';
+import './App.css';
 
 function App() {
   const navigate = useNavigate(); // Initialize navigation
@@ -25,17 +28,9 @@ function App() {
       <Header />
       <Home />
 
-      <div className="broadcast-messages" style={{ textAlign: "center", margin: "20px 0" }}>
-        <h2
-          style={{
-            animation: "pulse 1.5s infinite",
-            color: "red",
-            fontSize: "24px",
-            fontWeight: "bold",
-            textTransform: "uppercase",
-          }}
-        >
-          
+      <div className="broadcast-messages text-center my-5">
+        <h2 className="animate-pulse text-red-500 text-2xl font-bold uppercase">
+          {/* Add dynamic content here */}
         </h2>
         {broadcastMessages.length > 0 ? (
           broadcastMessages.map((msg) => (
@@ -47,7 +42,7 @@ function App() {
             </div>
           ))
         ) : (
-          <p style={{ fontSize: "16px", color: "#666" }}></p>
+          <p className="text-base text-gray-500">No messages available</p>
         )}
       </div>
 
