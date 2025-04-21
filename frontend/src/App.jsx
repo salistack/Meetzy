@@ -70,7 +70,7 @@ function App() {
       </div>
 
       <div className="profile">
-        <button className="profile-button" onClick={() => navigate("/create-profile")}>
+        <button className="profile-button" onClick={() => navigate("/profile")}>
           Profile Panel
         </button>
       </div>
