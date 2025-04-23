@@ -8,12 +8,11 @@ const path = require("path");
 const multer = require("multer");
 const authRoutes = require("./routes/loginAuthRoutes");
 const reportRoutes = require("./routes/ReportRoutes");
-
-
 const broadcastRoutes = require("./routes/BroadcastRoutes");
 const blogRoutes = require("./routes/BlogRoutes"); // Import routes
 const userRoutes = require("./routes/UserRoutes.js");
 const groupRoutes = require("./routes/GroupRoutes");
+const adminRoutes = require('./routes/adminRoutes');
 
 dotenv.config();
 connectDB();
@@ -64,6 +63,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/groups", groupRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/reports", reportRoutes);
+app.use('/api/admin', adminRoutes);
 
 const PORT = process.env.PORT || 5000;
 
