@@ -1,4 +1,5 @@
 const Blog = require("../models/BlogModel.js");
+const Report = require("../models/ReportModel");
 
 // ✅ Create a Blog
 const createBlog = async (req, res) => {
@@ -116,4 +117,43 @@ const rateBlog = async (req, res) => {
   }
 };
 
-module.exports = { createBlog, getAllBlogs, getBlogById, updateBlog, deleteBlog, rateBlog };
+
+
+// Report a blog
+const reportBlog = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { category, reportedBy } = req.body;
+
+    if (!category) {
+      return res.status(400).json({ message: "Category is required" });
+    }
+
+    const blog = await Blog.findById(id);
+    if (!blog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+    const newReport = new Report({
+      blogId: id,
+      reportedBy: reportedBy || "Anonymous",
+      category,
+    });
+
+    await newReport.save();
+
+    res.status(201).json({ message: "Blog reported successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { 
+  createBlog, 
+  getAllBlogs, 
+  getBlogById, 
+  updateBlog, 
+  deleteBlog, 
+  rateBlog,
+  reportBlog
+};

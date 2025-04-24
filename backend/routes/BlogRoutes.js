@@ -1,37 +1,38 @@
 const express = require("express");
-const multer = require("multer");
-const path = require("path");
+const router = express.Router();
 const {
   createBlog,
   getAllBlogs,
   getBlogById,
   updateBlog,
   deleteBlog,
-  rateBlog,  // ✅ Import the new rating function
-} = require("../Controllers/BlogController.js");
+  rateBlog,
+  reportBlog // Make sure this is imported
+} = require("../controllers/BlogController");
+const multer = require("multer");
+const path = require("path");
 
-const router = express.Router();
-
-// ✅ Configure multer for storing uploaded images
+// Configure multer storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/blogs/"); // Save images in the 'uploads/' directory
+    cb(null, "uploads/blogs/");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
-  },
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
 });
 
 const upload = multer({ storage });
 
-// ✅ Updated Routes with file upload support
-router.post("/", upload.single("photo"), createBlog); // Create blog with photo upload
+// Existing routes
+router.post("/", upload.single("photo"), createBlog);
 router.get("/", getAllBlogs);
 router.get("/:id", getBlogById);
-router.put("/:id", upload.single("photo"), updateBlog); // Allow updating blog with a new photo
+router.put("/:id", upload.single("photo"), updateBlog);
 router.delete("/:id", deleteBlog);
+router.post("/:id/rate", rateBlog);
 
-// ✅ New Rating Route
-router.post("/:id/rate", rateBlog);  // Allow users to rate a blog
+// Add report route - make sure it's after all other routes
+router.post("/:id/report", reportBlog); // No middleware needed for this route
 
 module.exports = router;
