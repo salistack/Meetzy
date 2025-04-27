@@ -6,20 +6,24 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const path = require("path"); 
 const multer = require("multer");
+
 const authRoutes = require("./routes/loginAuthRoutes");
 const reportRoutes = require("./routes/ReportRoutes");
 const broadcastRoutes = require("./routes/BroadcastRoutes");
-const blogRoutes = require("./routes/BlogRoutes"); // Import routes
+const blogRoutes = require("./routes/BlogRoutes");
 const userRoutes = require("./routes/UserRoutes.js");
 const groupRoutes = require("./routes/GroupRoutes");
 const adminRoutes = require('./routes/adminRoutes');
+
+// ⭐️ Added feedRoutes
+const feedRoutes = require("./routes/feedRoutes.js");
 
 dotenv.config();
 connectDB();
 
 const app = express();
 
-// ✅ Allow frontend requests from localhost:5173
+// Allow frontend requests from localhost:5173
 app.use(cors({
   origin: "http://localhost:5173",
   methods: ["GET", "POST", "PUT", "DELETE"],
@@ -48,7 +52,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-//  Image Upload Route
+// Image Upload Route
 app.post("/api/upload", upload.single("photo"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded" });
@@ -64,6 +68,9 @@ app.use("/api/groups", groupRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/reports", reportRoutes);
 app.use('/api/admin', adminRoutes);
+
+// ⭐️ Apply feed routes
+app.use("/api/feeds", feedRoutes);
 
 const PORT = process.env.PORT || 5000;
 

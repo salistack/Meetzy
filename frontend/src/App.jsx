@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from "react"; // Import useState and useEffect
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import axios from "axios"; // Import axios
-import Header from "./components/Header"; 
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Header from "./components/Header";
 import Home from "./pages/user/Home";
 import './index.css';
 import './App.css';
 
 function App() {
-  const navigate = useNavigate(); // Initialize navigation
-  const [broadcastMessages, setBroadcastMessages] = useState([]); // State for broadcast messages
+  const navigate = useNavigate(); 
+  const [broadcastMessages, setBroadcastMessages] = useState([]);
 
   useEffect(() => {
-    // Fetch broadcast messages on component mount
     const fetchBroadcastMessages = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/broadcasts"); // Update with your API URL
+        const response = await axios.get("http://localhost:5000/api/broadcasts");
         setBroadcastMessages(response.data.broadcasts);
       } catch (error) {
         console.error("Error fetching broadcast messages:", error);
@@ -71,7 +70,7 @@ function App() {
       </div>
 
       <div className="feed">
-        <button className="feed-button" onClick={() => navigate("/feed")}>
+        <button className="feed-button" onClick={() => navigate("/user/feeds")}>
           Feed Panel
         </button>
       </div>
