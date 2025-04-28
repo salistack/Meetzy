@@ -7,11 +7,10 @@ const cors = require("cors");
 const path = require("path"); 
 const multer = require("multer");
 
-const authRoutes = require("./routes/loginAuthRoutes");
+const authRoutes = require("./routes/authRoutes");
 const reportRoutes = require("./routes/ReportRoutes");
 const broadcastRoutes = require("./routes/BroadcastRoutes");
 const blogRoutes = require("./routes/BlogRoutes");
-const userRoutes = require("./routes/UserRoutes.js");
 const groupRoutes = require("./routes/GroupRoutes");
 const adminRoutes = require('./routes/adminRoutes');
 
@@ -63,7 +62,7 @@ app.post("/api/upload", upload.single("photo"), (req, res) => {
 // Apply routes
 app.use("/api/blogs", blogRoutes);
 app.use("/api/broadcasts", broadcastRoutes);
-app.use("/api/users", userRoutes);
+
 app.use("/api/groups", groupRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/reports", reportRoutes);
