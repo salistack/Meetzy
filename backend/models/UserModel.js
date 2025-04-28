@@ -13,6 +13,11 @@ const userSchema = new mongoose.Schema(
     phoneNumber: { type: String },
     website: { type: String },
     allInfo: { type: String }, // Optional field
+    isAdmin: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   {
     timestamps: true,
