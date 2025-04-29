@@ -18,6 +18,9 @@ const userSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
+    groupsJoined: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
+    groupsCreated: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
+
   },
   {
     timestamps: true,
