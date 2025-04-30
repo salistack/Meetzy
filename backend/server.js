@@ -18,9 +18,6 @@ const feedRoutes = require("./routes/feedRoutes.js");
 // ⭐️ Newly added userRoutes
 const userRoutes = require("./routes/UserRoutes");
 
-// ⭐️ Added feedRoutes
-const feedRoutes = require("./routes/feedRoutes.js");
-
 dotenv.config();
 connectDB();
 
