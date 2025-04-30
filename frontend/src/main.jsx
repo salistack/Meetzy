@@ -18,6 +18,8 @@ import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
 import CreateFeed from "./pages/user/feed/CreateFeed.jsx";
 import FeedList from "./pages/user/feed/FeedList.jsx";
 import EditFeed from "./pages/user/feed/EditFeed.jsx";
+import Profile from "./Profile";
+import UserDetails from "./pages/userDetails.jsx"; // Import UserDetails here
 import './index.css';
 
 createRoot(document.getElementById("root")).render(
@@ -40,6 +42,10 @@ createRoot(document.getElementById("root")).render(
         <Route path="/user/feeds" element={<FeedList />} />
         <Route path="/user/feeds/create" element={<CreateFeed />} />
         <Route path="/user/feeds/edit/:id" element={<EditFeed />} />
+        <Route path="/profile" element={<Profile />} />
+
+        {/* Updated route for UserDetails page */}
+        <Route path="/user/userDetails" element={<UserDetails />} />
       </Routes>
     </Router>
   </StrictMode>

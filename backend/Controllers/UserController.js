@@ -1,72 +1,75 @@
-const User = require("../models/UserModel.js");
+const User = require("../models/UserModel");
 
-// Create User
-const createUser = async (req, res) => {
+// GET logged-in user's profile
+const getUserProfile = async (req, res) => {
   try {
-    const { name, fullName, dob, nic, address, phoneNumber, website, allInfo } = req.body;
+    const user = await User.findById(req.user._id).select("-password");
 
-    if (!name || !fullName || !dob || !nic || !address || !phoneNumber) {
-      return res.status(400).json({ message: "Required fields missing" });
-    }
-
-    const newUser = new User({ name, fullName, dob, nic, address, phoneNumber, website, allInfo });
-    const savedUser = await newUser.save();
-
-    res.status(201).json(savedUser);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// Get All Users
-const getAllUsers = async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// Get Single User
-const getUserById = async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: "User not found" });
+
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Update User
-const updateUser = async (req, res) => {
+// UPDATE logged-in user's profile
+const updateUserProfile = async (req, res) => {
   try {
-    const { name, fullName, dob, nic, address, phoneNumber, website, allInfo } = req.body;
+    const user = await User.findById(req.user._id);
 
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      { name, fullName, dob, nic, address, phoneNumber, website, allInfo },
-      { new: true }
-    );
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    if (!updatedUser) return res.status(404).json({ message: "User not found" });
+    // Update only fields that are passed
+    user.fullName = req.body.fullName || user.fullName;
+    user.dob = req.body.dob || user.dob;
+    user.address = req.body.address || user.address;
+    user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
+    user.website = req.body.website || user.website;
+    user.allInfo = req.body.allInfo || user.allInfo;
 
-    res.status(200).json({ message: "User updated successfully", user: updatedUser });
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Delete User
-const deleteUser = async (req, res) => {
+// DELETE logged-in user's profile
+// DELETE logged-in user's profile
+const deleteUserProfile = async (req, res) => {
   try {
-    const deletedUser = await User.findByIdAndDelete(req.params.id);
-    if (!deletedUser) return res.status(404).json({ message: "User not found" });
-    res.status(200).json({ message: "User deleted successfully" });
+    const user = await User.findById(req.user._id);
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    await User.deleteOne({ _id: req.user._id });
+
+    res.status(200).json({ message: "User account deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = { createUser, getAllUsers, getUserById, updateUser, deleteUser };
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find(); // Fetch all users (including password — not recommended)
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+module.exports = {
+  getUserProfile,
+  updateUserProfile,
+  deleteUserProfile,
+  getAllUsers
+};
