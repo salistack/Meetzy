@@ -8,7 +8,7 @@ const {
   deleteBlog,
   rateBlog,
   reportBlog // Make sure this is imported
-} = require("../controllers/BlogController");
+} = require("../Controllers/BlogController");
 const multer = require("multer");
 const path = require("path");
 

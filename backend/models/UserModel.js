@@ -1,19 +1,45 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    fullName: { type: String, required: true },
-    dob: { type: Date, required: true },
-    nic: { type: String, required: true, unique: true },
-    address: { type: String, required: true },
-    phoneNumber: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+
+    fullName: { type: String },
+    dob: { type: Date },
+    address: { type: String },
+    phoneNumber: { type: String },
     website: { type: String },
-    allInfo: { type: String }, // Optional field for extra info
+    allInfo: { type: String }, // Optional field
+    isAdmin: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    groupsJoined: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
+    groupsCreated: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
+
   },
   {
     timestamps: true,
   }
 );
+
+// Encrypt password before saving
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+// Match user entered password to hashed password in database
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
 module.exports = mongoose.model("User", userSchema);

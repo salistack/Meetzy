@@ -29,7 +29,7 @@ const Header = () => {
         </a>
         <button
           className="bg-gray-700 hover:bg-gray-800 text-white py-2 px-6 rounded-full shadow-lg transition-transform duration-300 transform hover:scale-110"
-          onClick={() => navigate("/LoginPage")} // Navigate to LoginPage
+          onClick={() => navigate("/login")} // Navigate to LoginPage
         >
           Login
         </button>

@@ -24,11 +24,11 @@ const LoginPage = () => {
 
       console.log("Login successful:", response.data);
 
-      if (email === "meetzyadmin@gmail.com" && password === "meetzyadmin@gmail.com") {
-        navigate("/AdminDashboard");
-      } else {
-        navigate("/");
-      }
+      // Save the token to localStorage
+      localStorage.setItem("token", response.data.token);
+
+      // Navigate to Profile page after successful login
+      navigate("/profile");
     } catch (err) {
       const errorMessage = err.response?.data?.message || "Login failed";
       if (errorMessage.toLowerCase().includes("invalid credentials")) {
