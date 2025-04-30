@@ -12,7 +12,11 @@ const reportRoutes = require("./routes/ReportRoutes");
 const broadcastRoutes = require("./routes/BroadcastRoutes");
 const blogRoutes = require("./routes/BlogRoutes");
 const groupRoutes = require("./routes/GroupRoutes");
-const adminRoutes = require('./routes/adminRoutes');
+const adminRoutes = require("./routes/adminRoutes");
+const feedRoutes = require("./routes/feedRoutes.js");
+
+// ⭐️ Newly added userRoutes
+const userRoutes = require("./routes/UserRoutes");
 
 dotenv.config();
 connectDB();
@@ -60,11 +64,18 @@ app.post("/api/upload", upload.single("photo"), (req, res) => {
 // Apply routes
 app.use("/api/blogs", blogRoutes);
 app.use("/api/broadcasts", broadcastRoutes);
-app.use("/api/users", userRoutes);
+
 app.use("/api/groups", groupRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/reports", reportRoutes);
-app.use('/api/admin', adminRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/feeds", feedRoutes);
+
+// ⭐️ Apply user management routes
+app.use("/api/users", userRoutes);
+
+// ⭐️ Apply feed routes
+app.use("/api/feeds", feedRoutes);
 
 const PORT = process.env.PORT || 5000;
 

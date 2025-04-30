@@ -43,6 +43,8 @@ createRoot(document.getElementById("root")).render(
         <Route path="/user/feeds/create" element={<CreateFeed />} />
         <Route path="/user/feeds/edit/:id" element={<EditFeed />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/blogs/edit/:id" element={<EditBlog />} />
+
 
         {/* Updated route for UserDetails page */}
         <Route path="/user/userDetails" element={<UserDetails />} />

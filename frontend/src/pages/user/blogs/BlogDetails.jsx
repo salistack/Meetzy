@@ -14,31 +14,57 @@ const BlogDetails = () => {
     const [reportCategory, setReportCategory] = useState("");
     const [isReporting, setIsReporting] = useState(false);
     const [hoverRating, setHoverRating] = useState(0);
+    const [isAuthor, setIsAuthor] = useState(false);
+    const [userId, setUserId] = useState(null);
 
     useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const decoded = JSON.parse(atob(token.split('.')[1]));
+                setUserId(decoded.id);
+            } catch (error) {
+                console.error("Error decoding token:", error);
+            }
+        }
+
         const fetchBlog = async () => {
             try {
                 const response = await axios.get(`http://localhost:5000/api/blogs/${id}`);
                 setBlog(response.data);
                 setAverageRating(response.data.averageRating);
+                
+                // Check if current user is the author
+                if (token && response.data.author._id === userId) {
+                    setIsAuthor(true);
+                }
             } catch (error) {
                 console.error("Failed to fetch blog", error);
             }
         };
         fetchBlog();
-    }, [id]);
+    }, [id, userId]);
 
     const handleDelete = async () => {
         const confirmDelete = window.confirm("Are you sure you want to delete this blog?");
         if (!confirmDelete) return;
 
         try {
-            await axios.delete(`http://localhost:5000/api/blogs/${id}`);
+            const token = localStorage.getItem("token");
+            await axios.delete(`http://localhost:5000/api/blogs/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             alert("Blog deleted successfully!");
-            navigate("/user/blogs");
+            navigate("/blogs");
         } catch (error) {
             console.error("Error deleting blog:", error);
-            alert("Failed to delete blog.");
+            if (error.response?.status === 403) {
+                alert("You are not authorized to delete this blog");
+            } else {
+                alert("Failed to delete blog.");
+            }
         }
     };
 
@@ -64,9 +90,12 @@ const BlogDetails = () => {
 
         setIsReporting(true);
         try {
+            const token = localStorage.getItem("token");
             await axios.post(`http://localhost:5000/api/blogs/${id}/report`, {
                 category: reportCategory,
-                reportedBy: "User" // Replace with actual user if you have auth
+                reportedBy: userId ? "User" : "Anonymous"
+            }, {
+                headers: token ? { Authorization: `Bearer ${token}` } : {}
             });
             alert("Blog reported successfully!");
             setShowReportModal(false);
@@ -117,7 +146,7 @@ const BlogDetails = () => {
                 <div className="p-6">
                     <h2 className="text-2xl md:text-3xl font-bold mb-2">{blog.title}</h2>
                     <p className={`text-lg ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
-                        By {blog.authorName}
+                        By {blog.author?.name || 'Unknown Author'}
                     </p>
                 </div>
 
@@ -166,28 +195,34 @@ const BlogDetails = () => {
                     </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="p-6 flex flex-wrap gap-4 justify-center">
-                    <button 
-                        onClick={() => navigate(`/user/blogs/edit/${id}`)}
-                        className={`py-2 px-6 rounded-md transition duration-300 ${
-                            darkMode 
-                                ? "bg-blue-600 hover:bg-blue-700 text-white" 
-                                : "bg-blue-500 hover:bg-blue-600 text-white"
-                        }`}
-                    >
-                        Edit
-                    </button>
-                    <button 
-                        onClick={handleDelete}
-                        className={`py-2 px-6 rounded-md transition duration-300 ${
-                            darkMode 
-                                ? "bg-red-600 hover:bg-red-700 text-white" 
-                                : "bg-red-500 hover:bg-red-600 text-white"
-                        }`}
-                    >
-                        Delete
-                    </button>
+                {/* Action Buttons - Only show if user is the author */}
+                {isAuthor && (
+                    <div className="p-6 flex flex-wrap gap-4 justify-center">
+                        <button 
+                            onClick={() => navigate(`/blogs/edit/${id}`)}
+                            className={`py-2 px-6 rounded-md transition duration-300 ${
+                                darkMode 
+                                    ? "bg-blue-600 hover:bg-blue-700 text-white" 
+                                    : "bg-blue-500 hover:bg-blue-600 text-white"
+                            }`}
+                        >
+                            Edit
+                        </button>
+                        <button 
+                            onClick={handleDelete}
+                            className={`py-2 px-6 rounded-md transition duration-300 ${
+                                darkMode 
+                                    ? "bg-red-600 hover:bg-red-700 text-white" 
+                                    : "bg-red-500 hover:bg-red-600 text-white"
+                            }`}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                )}
+
+                {/* Report Button - Show for all users */}
+                <div className="p-6 flex justify-center">
                     <button 
                         onClick={() => setShowReportModal(true)}
                         className={`py-2 px-6 rounded-md transition duration-300 ${
@@ -226,11 +261,10 @@ const BlogDetails = () => {
                                 }`}
                             >
                                 <option value="">-- Select a reason --</option>
-                                <option value="sex">Inappropriate Content (Sexual)</option>
-                                <option value="terrorism">Violence or Terrorism</option>
-                                <option value="abuse">Harassment or Abuse</option>
-                                <option value="hateSpeech">Hate Speech</option>
-                                <option value="fake">False Information</option>
+                                <option value="inappropriate">Inappropriate Content</option>
+                                <option value="spam">Spam or Misleading</option>
+                                <option value="hate">Hate Speech</option>
+                                <option value="harassment">Harassment</option>
                                 <option value="other">Other</option>
                             </select>
                             <div className="flex justify-end gap-4 mt-6">
@@ -264,6 +298,6 @@ const BlogDetails = () => {
             )}
         </div>
     );
-};
+}; 
 
 export default BlogDetails;

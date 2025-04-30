@@ -1,18 +1,18 @@
 import { useState } from "react";
-import "./CreateBlog.css";  // Import your custom CSS if you need
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./CreateBlog.css";
 
 const CreateBlog = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
-    authorName: "",
     description: "",
-    content: "",
     category: "Travel",
-    tags: "",
   });
-
   const [photo, setPhoto] = useState(null);
-  const [errors, setErrors] = useState({}); // Store validation errors
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,14 +37,6 @@ const CreateBlog = () => {
       }
     }
 
-    if (name === "authorName") {
-      if (!/^[A-Za-z\s]+$/.test(value)) {
-        newErrors.authorName = "Author name can only contain letters and spaces.";
-      } else {
-        delete newErrors.authorName;
-      }
-    }
-
     if (name === "category" && !["loneliness", "Health", "Travel", "Education"].includes(value)) {
       newErrors.category = "Please select a valid category.";
     } else {
@@ -56,47 +48,46 @@ const CreateBlog = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    // Final validation before submission
-    if (Object.keys(errors).length > 0 || !formData.title || !formData.authorName) {
+    if (Object.keys(errors).length > 0 || !formData.title || !formData.description || !formData.category) {
       alert("Please correct the errors before submitting.");
+      setIsSubmitting(false);
       return;
     }
 
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
-      formDataToSend.append("authorName", formData.authorName);
       formDataToSend.append("description", formData.description);
       formDataToSend.append("category", formData.category);
-      formDataToSend.append("tags", formData.tags.split(",").map(tag => tag.trim()));
 
       if (photo) {
         formDataToSend.append("photo", photo);
       }
 
-      const response = await fetch("http://localhost:5000/api/blogs", {
-        method: "POST",
-        body: formDataToSend,
+      const token = localStorage.getItem("token");
+      const response = await axios.post("http://localhost:5000/api/blogs", formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       });
 
-      if (response.ok) {
+      if (response.status === 201) {
         alert("Blog Created Successfully!");
-        setFormData({
-          title: "",
-          authorName: "",
-          description: "",
-          content: "",
-          category: "Travel",
-          tags: "",
-        });
-        setPhoto(null);
-        setErrors({});
-      } else {
-        alert("Error creating blog");
+        navigate("/blogs");
       }
     } catch (error) {
       console.error("Error:", error);
+      if (error.response?.status === 401) {
+        alert("Please login to create a blog");
+        navigate("/login");
+      } else {
+        alert("Error creating blog");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -119,20 +110,6 @@ const CreateBlog = () => {
             {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
           </div>
 
-          {/* Author Name Field */}
-          <div className="space-y-2">
-            <input
-              type="text"
-              name="authorName"
-              value={formData.authorName}
-              placeholder="Author Name"
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 bg-transparent border border-white/50 text-white rounded-lg focus:ring-2 focus:ring-yellow-400"
-            />
-            {errors.authorName && <p className="text-red-500 text-sm">{errors.authorName}</p>}
-          </div>
-
           {/* Description Field */}
           <div className="space-y-2">
             <textarea
@@ -142,6 +119,7 @@ const CreateBlog = () => {
               onChange={handleChange}
               required
               className="w-full px-4 py-2 bg-transparent border border-white/50 text-white rounded-lg focus:ring-2 focus:ring-yellow-400"
+              rows="5"
             ></textarea>
           </div>
 
@@ -181,9 +159,10 @@ const CreateBlog = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-lg transition-all"
+            disabled={isSubmitting}
+            className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-lg transition-all disabled:opacity-50"
           >
-            Create Blog
+            {isSubmitting ? "Creating..." : "Create Blog"}
           </button>
         </form>
       </div>

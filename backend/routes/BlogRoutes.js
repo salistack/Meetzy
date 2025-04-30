@@ -7,10 +7,11 @@ const {
   updateBlog,
   deleteBlog,
   rateBlog,
-  reportBlog // Make sure this is imported
+  reportBlog
 } = require("../Controllers/BlogController");
 const multer = require("multer");
 const path = require("path");
+const { protect } = require("../middlewares/authMiddleware"); // Import the protect middleware
 
 // Configure multer storage
 const storage = multer.diskStorage({
@@ -19,20 +20,18 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
-  }
+  },
 });
 
 const upload = multer({ storage });
 
-// Existing routes
-router.post("/", upload.single("photo"), createBlog);
+// Routes
+router.post("/", protect, upload.single("photo"), createBlog); // Protected route
 router.get("/", getAllBlogs);
 router.get("/:id", getBlogById);
-router.put("/:id", upload.single("photo"), updateBlog);
-router.delete("/:id", deleteBlog);
+router.put("/:id", protect, upload.single("photo"), updateBlog); // Protected route
+router.delete("/:id", protect, deleteBlog); // Protected route
 router.post("/:id/rate", rateBlog);
-
-// Add report route - make sure it's after all other routes
-router.post("/:id/report", reportBlog); // No middleware needed for this route
+router.post("/:id/report", reportBlog);
 
 module.exports = router;

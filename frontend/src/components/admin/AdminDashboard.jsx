@@ -59,7 +59,7 @@ const AdminDashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      
+
       const response = await axios.get('/api/admin/stats'); // Replace mock data with API call
       console.log("API Response:", response.data); // Log the API response
 
@@ -67,6 +67,7 @@ const AdminDashboard = () => {
         throw new Error("Invalid API response format");
       }
 
+      setStats(response.data);
       setStats(response.data);
       setLoading(false);
     } catch (error) {
