@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import './BlogDetails.css';
 
 const BlogDetails = () => {
     const { id } = useParams();
@@ -116,78 +115,94 @@ const BlogDetails = () => {
 
     useEffect(() => {
         document.documentElement.setAttribute("data-theme", darkMode ? "dark" : "light");
+        
+        // Add custom CSS variables for the theme color
+        document.documentElement.style.setProperty('--primary-color', '#42f5ad');
+        document.documentElement.style.setProperty('--primary-hover', '#35d696');
     }, [darkMode]);
 
     if (!blog) return (
         <div className="flex justify-center items-center h-screen">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4" style={{ borderColor: "#42f5ad" }}></div>
         </div>
     );
 
     return (
-        <div className={`min-h-screen flex flex-col items-center ${darkMode ? "bg-gray-900" : "bg-gray-100"} p-4 md:p-8 transition-colors duration-300`}>
+        <div className={`min-h-screen flex flex-col items-center ${darkMode ? "bg-gray-900" : "bg-gray-50"} p-4 md:p-8 transition-colors duration-500`}>
             {/* Dark Mode Toggle */}
-            <button
-                onClick={toggleDarkMode}
-                className={`self-end mb-4 py-2 px-4 rounded-md shadow-md transition duration-300 ${
-                    darkMode 
-                        ? "bg-indigo-700 hover:bg-indigo-600 text-white" 
-                        : "bg-white hover:bg-gray-200 text-gray-800"
-                }`}
-            >
-                {darkMode ? "☀ Light Mode" : "🌙 Dark Mode"}
-            </button>
+            <div className="w-full max-w-4xl flex justify-end mb-6">
+                <button
+                    onClick={toggleDarkMode}
+                    className={`py-2 px-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2 ${
+                        darkMode 
+                            ? "bg-emerald-400 hover:bg-emerald-300 text-gray-900" 
+                            : "bg-emerald-400 hover:bg-emerald-300 text-gray-900"
+                    }`}
+                    style={{ backgroundColor: "#42f5ad" }}
+                >
+                    {darkMode ? "☀️ Light" : "🌙 Dark"}
+                </button>
+            </div>
 
             {/* Blog Content */}
-            <div className={`w-full max-w-4xl rounded-lg shadow-lg overflow-hidden ${
-                darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-800"
-            }`}>
+            <div className={`w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden transform transition-all duration-300 ${darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-800"}`}>
                 {/* Blog Header */}
-                <div className="p-6">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-2">{blog.title}</h2>
-                    <p className={`text-lg ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
-                        By {blog.author?.name || 'Unknown Author'}
-                    </p>
+                <div className="p-8">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-3 leading-tight">{blog.title}</h2>
+                    <div className={`flex items-center ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                        <span className="text-lg font-medium">By {blog.author?.name || 'Unknown Author'}</span>
+                    </div>
                 </div>
 
                 {/* Blog Image */}
                 {blog.photo && (
-                    <div className="w-full h-64 md:h-96 overflow-hidden">
+                    <div className="w-full h-72 md:h-96 overflow-hidden">
                         <img 
                             src={`http://localhost:5000${blog.photo}`} 
                             alt={blog.title} 
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                             crossOrigin="anonymous"
                         />
                     </div>
                 )}
 
                 {/* Blog Description */}
-                <div className="p-6">
+                <div className="p-8">
                     <p className="text-lg leading-relaxed whitespace-pre-line">
                         {blog.description}
                     </p>
                 </div>
 
                 {/* Rating Section */}
-                <div className="p-6 border-t border-b border-opacity-20">
-                    <div className="flex flex-col items-center mb-4">
-                        <p className="text-xl font-semibold mb-2">
-                            ⭐ Average Rating: {averageRating || "No ratings yet"}
+                <div className={`p-8 ${darkMode ? "bg-gray-700" : "bg-gray-50"} border-t border-b ${darkMode ? "border-gray-700" : "border-gray-200"}`}>
+                    <div className="flex flex-col items-center">
+                        <p className="text-xl font-semibold mb-4">
+                            {averageRating ? (
+                                <span className="flex items-center gap-2">
+                                    <span style={{ color: "#42f5ad" }} className="text-2xl">⭐</span> 
+                                    <span>Average Rating: {averageRating}</span>
+                                </span>
+                            ) : (
+                                "No ratings yet"
+                            )}
                         </p>
-                        <div className="flex items-center">
-                            <p className="mr-4">Rate this blog:</p>
+                        <div className="flex flex-col md:flex-row items-center gap-3">
+                            <p className="font-medium">Rate this blog:</p>
                             <div className="flex">
                                 {[1, 2, 3, 4, 5].map((star) => (
                                     <button
                                         key={star}
                                         type="button"
-                                        className="text-2xl focus:outline-none"
+                                        className="text-3xl focus:outline-none transition-transform duration-200 hover:scale-110 px-1"
                                         onClick={() => handleRateBlog(star)}
                                         onMouseEnter={() => setHoverRating(star)}
                                         onMouseLeave={() => setHoverRating(0)}
                                     >
-                                        {star <= (hoverRating || rating) ? "⭐" : "☆"}
+                                        {star <= (hoverRating || rating) ? (
+                                            <span style={{ color: "#42f5ad" }}>⭐</span>
+                                        ) : (
+                                            <span className="text-gray-400">☆</span>
+                                        )}
                                     </button>
                                 ))}
                             </div>
@@ -197,26 +212,20 @@ const BlogDetails = () => {
 
                 {/* Action Buttons - Only show if user is the author */}
                 {isAuthor && (
-                    <div className="p-6 flex flex-wrap gap-4 justify-center">
+                    <div className="p-8 flex flex-wrap gap-4 justify-center">
                         <button 
                             onClick={() => navigate(`/blogs/edit/${id}`)}
-                            className={`py-2 px-6 rounded-md transition duration-300 ${
-                                darkMode 
-                                    ? "bg-blue-600 hover:bg-blue-700 text-white" 
-                                    : "bg-blue-500 hover:bg-blue-600 text-white"
-                            }`}
+                            className="py-3 px-8 rounded-lg font-semibold shadow-md transition-all duration-300 transform hover:scale-105 text-gray-900"
+                            style={{ backgroundColor: "#42f5ad" }}
                         >
-                            Edit
+                            Edit Blog
                         </button>
                         <button 
                             onClick={handleDelete}
-                            className={`py-2 px-6 rounded-md transition duration-300 ${
-                                darkMode 
-                                    ? "bg-red-600 hover:bg-red-700 text-white" 
-                                    : "bg-red-500 hover:bg-red-600 text-white"
-                            }`}
+                            className="py-3 px-8 rounded-lg font-semibold shadow-md transition-all duration-300 transform hover:scale-105 text-gray-900"
+                            style={{ backgroundColor: "#42f5ad" }}
                         >
-                            Delete
+                            Delete Blog
                         </button>
                     </div>
                 )}
@@ -225,40 +234,41 @@ const BlogDetails = () => {
                 <div className="p-6 flex justify-center">
                     <button 
                         onClick={() => setShowReportModal(true)}
-                        className={`py-2 px-6 rounded-md transition duration-300 ${
-                            darkMode 
-                                ? "bg-yellow-600 hover:bg-yellow-700 text-white" 
-                                : "bg-yellow-500 hover:bg-yellow-600 text-white"
-                        }`}
+                        className="py-2 px-6 rounded-full font-medium transition-all duration-300 text-gray-900"
+                        style={{ backgroundColor: "#42f5ad" }}
                     >
-                        Report
+                        Report this blog
                     </button>
                 </div>
             </div>
 
             {/* Report Modal */}
             {showReportModal && (
-                <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50 p-4">
-                    <div className={`w-full max-w-md rounded-lg shadow-xl ${
-                        darkMode ? "bg-gray-800" : "bg-white"
-                    }`}>
-                        <div className="p-6">
-                            <h3 className={`text-xl font-bold mb-4 ${
-                                darkMode ? "text-white" : "text-gray-800"
-                            }`}>
+                <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-70 z-50 p-4 backdrop-blur-sm transition-opacity duration-300">
+                    <div 
+                        className={`w-full max-w-md rounded-xl shadow-2xl transform transition-all duration-300 ${
+                            darkMode ? "bg-gray-800" : "bg-white"
+                        }`}
+                    >
+                        <div className="p-8">
+                            <h3 className={`text-2xl font-bold mb-4 ${darkMode ? "text-white" : "text-gray-800"}`}>
                                 Report Blog
                             </h3>
-                            <p className={`mb-2 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            <p className={`mb-4 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
                                 Please select a reason for reporting:
                             </p>
                             <select
                                 value={reportCategory}
                                 onChange={(e) => setReportCategory(e.target.value)}
-                                className={`w-full p-3 rounded-md border ${
+                                className={`w-full p-3 rounded-lg border focus:ring-2 focus:outline-none transition-colors duration-200 ${
                                     darkMode 
                                         ? "bg-gray-700 border-gray-600 text-white" 
                                         : "bg-white border-gray-300 text-gray-800"
                                 }`}
+                                style={{ 
+                                    borderColor: "#42f5ad", 
+                                    "--tw-ring-color": "#42f5ad"
+                                }}
                             >
                                 <option value="">-- Select a reason --</option>
                                 <option value="inappropriate">Inappropriate Content</option>
@@ -267,27 +277,21 @@ const BlogDetails = () => {
                                 <option value="harassment">Harassment</option>
                                 <option value="other">Other</option>
                             </select>
-                            <div className="flex justify-end gap-4 mt-6">
+                            <div className="flex justify-end gap-4 mt-8">
                                 <button 
                                     onClick={() => setShowReportModal(false)}
-                                    className={`py-2 px-4 rounded-md ${
-                                        darkMode 
-                                            ? "bg-gray-600 hover:bg-gray-500 text-white" 
-                                            : "bg-gray-200 hover:bg-gray-300 text-gray-800"
-                                    }`}
+                                    className="py-2 px-6 rounded-lg font-medium border border-gray-300 transition-all duration-300 text-gray-900"
+                                    style={{ backgroundColor: "#42f5ad" }}
                                 >
                                     Cancel
                                 </button>
                                 <button 
                                     onClick={handleReportBlog}
                                     disabled={isReporting || !reportCategory}
-                                    className={`py-2 px-4 rounded-md ${
-                                        isReporting 
-                                            ? "bg-gray-500 text-white" 
-                                            : darkMode 
-                                                ? "bg-red-600 hover:bg-red-500 text-white" 
-                                                : "bg-red-500 hover:bg-red-400 text-white"
+                                    className={`py-2 px-6 rounded-lg font-medium transition-all duration-300 text-gray-900 ${
+                                        isReporting ? "opacity-50 cursor-not-allowed" : ""
                                     }`}
+                                    style={{ backgroundColor: isReporting ? "#a8f8d6" : "#42f5ad" }}
                                 >
                                     {isReporting ? "Submitting..." : "Submit Report"}
                                 </button>
@@ -298,6 +302,6 @@ const BlogDetails = () => {
             )}
         </div>
     );
-}; 
+};
 
 export default BlogDetails;

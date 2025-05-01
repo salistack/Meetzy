@@ -20,10 +20,9 @@ const Blogs = () => {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const data = await response.json();
-                
                 if (Array.isArray(data)) {
                     setBlogs(data);
-                    setFilteredBlogs(data); // Initialize with all blogs
+                    setFilteredBlogs(data);
                 } else {
                     setError("API response is not in the expected format");
                 }
@@ -38,12 +37,11 @@ const Blogs = () => {
         fetchBlogs();
     }, []);
 
-    // Filtering logic
     useEffect(() => {
         let filtered = blogs;
 
         if (searchQuery) {
-            filtered = filtered.filter(blog => 
+            filtered = filtered.filter(blog =>
                 blog.title.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
@@ -55,73 +53,87 @@ const Blogs = () => {
         setFilteredBlogs(filtered);
     }, [searchQuery, selectedCategory, blogs]);
 
-    if (loading) return <p>Loading blogs...</p>;
-    if (error) return <p>Error: {error}</p>;
+    if (loading) return <div className="text-center text-gray-800 font-bold text-xl p-5">Loading blogs...</div>;
+    if (error) return <div className="text-center text-red-600 font-bold text-xl p-5">Error: {error}</div>;
 
     return (
-        <div className="blogs-container min-h-screen w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 flex flex-col justify-start items-center">
-            <h2 className="text-2xl font-bold mb-8 text-white">MeetZY BlogZ</h2>
-        
+        <div className="blogs-container bg-[#f3f6f5] min-h-screen w-full flex flex-col justify-start items-center py-12 px-4 sm:px-6 lg:px-8">
+            <h2 className="text-4xl font-extrabold text-gray-800 mb-10 tracking-wide">MeetZY BlogZ</h2>
+
             {/* Search & Filter Bar */}
-            <div className="search-filter-bar flex justify-between items-center mb-8 space-x-6 w-full max-w-6xl px-6">
-                <div className="search-box relative w-72">
-                    <FontAwesomeIcon icon={faSearch} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300" />
-                    <input 
-                        type="text" 
-                        placeholder="Search by topic..." 
-                        value={searchQuery} 
-                        onChange={(e) => setSearchQuery(e.target.value)} 
-                        className="w-full py-2 pl-10 pr-4 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            <div className="search-filter-bar flex flex-col md:flex-row justify-between items-center mb-12 w-full max-w-6xl space-y-6 md:space-y-0 px-3">
+                <div className="search-box relative w-full md:w-96">
+                    <FontAwesomeIcon icon={faSearch} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <input
+                        type="text"
+                        placeholder="Search by topic..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full py-3 pl-12 pr-4 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 bg-white shadow-sm"
                     />
                 </div>
 
-                <select 
-                    value={selectedCategory} 
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="py-2 px-4 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                    <option value="All">All Categories</option>
-                    <option value="loneliness">Loneliness</option>
-                    <option value="Health">Health</option>
-                    <option value="Travel">Travel</option>
-                    <option value="Education">Education</option>
-                </select>
+                <div className="filter-box relative">
+                    <select
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        className="py-3 px-6 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 bg-white shadow-sm"
+                    >
+                        <option value="All">All Categories</option>
+                        <option value="loneliness">Loneliness</option>
+                        <option value="Health">Health</option>
+                        <option value="Travel">Travel</option>
+                        <option value="Education">Education</option>
+                    </select>
+                </div>
 
-                <button 
-                    onClick={() => navigate("/user/blogs/create")} 
-                    className="py-2 px-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-lg hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <button
+                    onClick={() => navigate("/user/blogs/create")}
+                    className="py-3 px-8 bg-green-500 hover:bg-green-400 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 transition-all shadow-md"
                 >
                     Create Blog
                 </button>
             </div>
 
             {/* Blogs List */}
-            <div className="blog-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-6xl px-6">
+            <div className="blog-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-6xl px-3">
                 {filteredBlogs.length > 0 ? (
                     filteredBlogs.map((blog) => {
-                        const imageUrl = blog.photo ? `http://localhost:5000${blog.photo}` : "https://placehold.co/300";
+                        const imageUrl = blog.photo ? `http://localhost:5000${blog.photo}` : "https://placehold.co/400";
 
                         return (
-                            <div key={blog._id} className="blog-card bg-white p-6 rounded-lg border border-gray-200 shadow-lg transition transform hover:translate-y-2">
-                                <img 
-                                  src={imageUrl} 
-                                  alt={blog.title} 
-                                  className="w-full h-48 object-cover rounded-lg mb-4"
-                                  crossOrigin="anonymous"
+                            <div
+                                key={blog._id}
+                                className="blog-card relative bg-white p-6 rounded-2xl border border-gray-200 shadow hover:shadow-lg transition-transform hover:scale-[1.02] ease-in-out duration-300"
+                            >
+                                <img
+                                    src={imageUrl}
+                                    alt={blog.title}
+                                    className="w-full h-56 object-cover rounded-xl mb-4 shadow-sm transition-transform duration-300 transform hover:scale-105"
+                                    crossOrigin="anonymous"
                                 />
-                                <h3 className="text-xl font-semibold text-gray-800 mb-2">{blog.title}</h3>
-                                <p className="text-sm text-gray-600">by {blog.authorName || "Unknown"}</p>
-                                <Link 
-                                    to={`/user/blogs/${blog._id}`} 
-                                    className="mt-4 inline-block py-2 px-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-lg hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                >
-                                    Read More
-                                </Link>
+
+                                {/* Category Badge */}
+                                <span className="absolute top-4 left-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                                    {blog.category}
+                                </span>
+
+                                <h3 className="text-2xl font-bold text-gray-800 mb-2 line-clamp-2">{blog.title}</h3>
+                                <p className="text-sm text-gray-500 mb-4">by {blog.authorName || "Unknown"}</p>
+
+                                <div className="flex justify-between items-center">
+                                    <Link
+                                        to={`/user/blogs/${blog._id}`}
+                                        className="py-2 px-5 text-sm bg-green-500 hover:bg-green-400 text-white rounded-xl transition-all shadow"
+                                    >
+                                        Read More
+                                    </Link>
+                                </div>
                             </div>
                         );
                     })
                 ) : (
-                    <p>No blogs available</p>
+                    <div className="col-span-full text-center text-gray-600 text-xl">No blogs available</div>
                 )}
             </div>
         </div>

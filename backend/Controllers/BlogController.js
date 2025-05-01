@@ -162,6 +162,52 @@ const reportBlog = async (req, res) => {
   }
 };
 
+// ✅ Admin: Get Filtered Blogs with Count and Filtered Category-wise Stats
+const getFilteredBlogsWithCount = async (req, res) => {
+  try {
+    const { category, author, dateFrom, dateTo, title } = req.query;
+
+    const filter = {};
+    if (category) filter.category = category;
+    if (author) filter.author = author;
+    if (title) filter.title = { $regex: title, $options: "i" };
+    if (dateFrom || dateTo) {
+      filter.createdAt = {};
+      if (dateFrom) filter.createdAt.$gte = new Date(dateFrom);
+      if (dateTo) filter.createdAt.$lte = new Date(dateTo);
+    }
+
+    // Apply filter for filtered blogs
+    const blogs = await Blog.find(filter).populate("author", "name email");
+    const filteredCount = blogs.length;
+
+    // Total blog count in DB (unfiltered)
+    const totalCount = await Blog.countDocuments();
+
+    // Category-wise counts based on current filter
+    const categories = ["Loneliness", "Health", "Travel", "Education"];
+    const categoryCounts = {};
+
+    for (const cat of categories) {
+      categoryCounts[cat] = await Blog.countDocuments({
+        ...filter,
+        category: cat
+      });
+    }
+
+    res.status(200).json({
+      totalCount,
+      filteredCount,
+      categoryCounts,
+      blogs,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
 module.exports = {
   createBlog,
   getAllBlogs,
@@ -169,5 +215,6 @@ module.exports = {
   updateBlog,
   deleteBlog,
   rateBlog,
-  reportBlog
+  reportBlog,
+getFilteredBlogsWithCount
 };

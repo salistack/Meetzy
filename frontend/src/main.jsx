@@ -8,6 +8,8 @@ import BlogDetails from "./pages/user/blogs/BlogDetails.jsx";
 import CreateBlog from "./pages/user/blogs/CreateBlog.jsx";
 import EditBlog from "./pages/user/blogs/EditBlog.jsx";
 import AdminDashboard from "./components/admin/AdminDashboard.jsx";
+import AdminBlogsPage from "./pages/user/blogs/AdminBlogsPage.jsx";
+
 import GroupsPage from "./pages/user/groups/GroupPage.jsx";
 import CreateGroup from "./pages/user/groups/CreateGroup.jsx";
 import GroupDetails from "./pages/user/groups/GroupDetails.jsx";
@@ -20,6 +22,7 @@ import FeedList from "./pages/user/feed/FeedList.jsx";
 import EditFeed from "./pages/user/feed/EditFeed.jsx";
 import Profile from "./Profile";
 import UserDetails from "./pages/userDetails.jsx"; // Import UserDetails here
+
 import './index.css';
 
 createRoot(document.getElementById("root")).render(
@@ -31,6 +34,8 @@ createRoot(document.getElementById("root")).render(
         <Route path="/user/blogs/create" element={<CreateBlog />} />
         <Route path="/user/blogs/:id" element={<BlogDetails />} />
         <Route path="/user/blogs/edit/:id" element={<EditBlog />} />
+        <Route path="/user/AdminManageBlogs" element={<AdminBlogsPage />} />
+
         <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
         <Route path="/user/groups" element={<GroupsPage />} />
         <Route path="/user/groups/create" element={<CreateGroup />} />
@@ -44,8 +49,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/user/feeds/edit/:id" element={<EditFeed />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/blogs/edit/:id" element={<EditBlog />} />
-
-
+        
         {/* Updated route for UserDetails page */}
         <Route path="/user/userDetails" element={<UserDetails />} />
       </Routes>
