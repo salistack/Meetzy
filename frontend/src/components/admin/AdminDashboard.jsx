@@ -32,6 +32,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ReportedBlogs from "./ReportedBlogs";
 import UserDetails from "../../pages/userDetails.jsx";  // Corrected import path
 import AdminBlogsPage from "../../pages/user/blogs/AdminBlogsPage.jsx"; // Correct import
+import Broadcast from "./Broadcast"; // Add this import
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
@@ -236,10 +237,11 @@ const AdminDashboard = () => {
 
           {active === "Dashboard" && renderDashboard()}
           {active === "Search" && <h2 className="text-2xl font-bold text-black">Search Section</h2>}
-          {active === "Broadcast Message" && <div>Broadcast Message Section</div>}
+          {active === "Broadcast Message" && <Broadcast />}
           {active === "Reported blogs" && <ReportedBlogs />}
           {active === "UserDetails" && <UserDetails />}
           {active === "AdminManageBlogs" && <AdminBlogsPage />}
+          
         </div>
       </div>
     </div>

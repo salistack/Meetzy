@@ -22,6 +22,7 @@ import CreateFeed from "./pages/user/feed/CreateFeed.jsx";
 import FeedList from "./pages/user/feed/FeedList.jsx";
 import EditFeed from "./pages/user/feed/EditFeed.jsx";
 import Profile from "./Profile";
+import Broadcast from "./components/admin/Broadcast.jsx";
 import UserDetails from "./pages/userDetails.jsx";
 
 import PrivacyPolicy from "./components/PrivacyPolicy.jsx";
@@ -43,6 +44,7 @@ createRoot(document.getElementById("root")).render(
 
   {/* Admin dashboard */}
   <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
+  <Route path="/admin/Broadcast" element={<Broadcast />} />
 
   {/* Group routes */}
   <Route path="/user/groups" element={<GroupsPage />} />
