@@ -85,7 +85,7 @@ const ReportedBlogs = () => {
       if (action === "view") {
         const report = reportedBlogs.find((r) => r._id === reportId);
         if (report && report.blogId && report.blogId._id) {
-          navigate(`/blog/${report.blogId._id}`); // Navigate to the blog's page
+          navigate(`/user/blogs/${report.blogId._id}`); // Navigate to the new path
         } else {
           alert("Blog not found or invalid blog ID.");
         }
