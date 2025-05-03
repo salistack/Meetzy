@@ -5,7 +5,8 @@ const {
   getAllFeeds,
   getFeedById,
   updateFeed,
-  deleteFeed
+  deleteFeed,
+  likeFeed // New controller for likes
 } = require("../Controllers/feedController");
 
 // Basic feed routes
@@ -14,5 +15,8 @@ router.get("/", getAllFeeds);
 router.get("/:id", getFeedById);
 router.put("/:id", updateFeed);
 router.delete("/:id", deleteFeed);
+
+// Route to handle likes
+router.patch("/:id/like", likeFeed);
 
 module.exports = router;

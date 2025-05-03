@@ -96,7 +96,8 @@ const deleteBlog = async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ message: "Blog not found" });
 
-    if (blog.author.toString() !== req.user.id) {
+    // Check if the user is an admin
+    if (!req.user.isAdmin) {
       return res.status(403).json({ message: "You are not authorized to delete this blog" });
     }
 

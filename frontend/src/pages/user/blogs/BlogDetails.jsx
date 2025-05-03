@@ -90,9 +90,10 @@ const BlogDetails = () => {
         setIsReporting(true);
         try {
             const token = localStorage.getItem("token");
-            await axios.post(`http://localhost:5000/api/blogs/${id}/report`, {
+            await axios.post(`http://localhost:5000/api/reports`, {
+                blogId: id, // Include the blogId in the request
                 category: reportCategory,
-                reportedBy: userId ? "User" : "Anonymous"
+                reportedBy: userId || "Anonymous",
             }, {
                 headers: token ? { Authorization: `Bearer ${token}` } : {}
             });
@@ -271,10 +272,11 @@ const BlogDetails = () => {
                                 }}
                             >
                                 <option value="">-- Select a reason --</option>
-                                <option value="inappropriate">Inappropriate Content</option>
-                                <option value="spam">Spam or Misleading</option>
-                                <option value="hate">Hate Speech</option>
-                                <option value="harassment">Harassment</option>
+                                <option value="sex">Sexual Content</option>
+                                <option value="terrorism">Terrorism</option>
+                                <option value="abuse">Abuse</option>
+                                <option value="hateSpeech">Hate Speech</option> {/* Corrected value */}
+                                <option value="fake">Fake Information</option>
                                 <option value="other">Other</option>
                             </select>
                             <div className="flex justify-end gap-4 mt-8">

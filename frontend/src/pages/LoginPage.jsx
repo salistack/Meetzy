@@ -11,6 +11,7 @@ const LoginPage = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     if (!email || !password) {
       setError("All fields are required");
       return;
@@ -22,14 +23,27 @@ const LoginPage = () => {
         password,
       });
 
+
+      // ✅ Store the token for future requests
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userId", response.data._id);
+      
       console.log("Login successful:", response.data);
 
-      // Save the token to localStorage
-      localStorage.setItem("token", response.data.token);
+      
 
-      // Navigate to Profile page after successful login
-      navigate("/profile");
+
+      // Redirect based on user role
+      if (response.data.isAdmin) {
+        console.log("Redirecting to admin dashboard"); // Debug log
+        navigate("/admin/AdminDashboard"); // Redirect to admin dashboard
+
+      } else {
+        console.log("Redirecting to user profile"); // Debug log
+        navigate("/profile"); // Redirect to user profile
+      }
     } catch (err) {
+      console.error("Login error:", err.response?.data || err); // Debug log
       const errorMessage = err.response?.data?.message || "Login failed";
       if (errorMessage.toLowerCase().includes("invalid credentials")) {
         setError("Invalid password. Forgot your password?");
@@ -48,6 +62,7 @@ const LoginPage = () => {
         className="bg-white/20 backdrop-blur-lg p-8 rounded-lg shadow-lg w-full max-w-md"
       >
         <h1 className="text-3xl font-extrabold text-white text-center mb-6">Login</h1>
+
         {error && (
           <p className="text-red-400 text-sm text-center mb-4">
             {error}{" "}

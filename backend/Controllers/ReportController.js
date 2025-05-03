@@ -5,7 +5,7 @@ const Blog = require("../models/BlogModel");
 const getReportedBlogs = async (req, res) => {
   try {
     const reports = await Report.find()
-      .populate("blogId", "title authorName description photo")
+      .populate("blogId", "title description photo author category") // Ensure all required fields are populated
       .sort({ createdAt: -1 });
 
     res.status(200).json(reports);
@@ -57,8 +57,58 @@ const deleteReport = async (req, res) => {
   }
 };
 
+// Delete multiple reports
+const deleteMultipleReports = async (req, res) => {
+  try {
+    const { reportIds } = req.body;
+
+    if (!Array.isArray(reportIds) || reportIds.length === 0) {
+      return res.status(400).json({ message: "No report IDs provided." });
+    }
+
+    await Report.deleteMany({ _id: { $in: reportIds } });
+
+    res.status(200).json({ message: "Reports deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Create a report
+const createReport = async (req, res) => {
+  try {
+    const { blogId, category, reportedBy } = req.body;
+
+    // Validate required fields
+    if (!blogId || !category || !reportedBy) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    // Validate category
+    const validCategories = ["sex", "terrorism", "abuse", "hateSpeech", "fake", "other"];
+    if (!validCategories.includes(category)) {
+      return res.status(400).json({ message: "Invalid category" });
+    }
+
+    // Create the report
+    const report = new Report({
+      blogId,
+      category,
+      reportedBy,
+    });
+
+    await report.save();
+    res.status(201).json({ message: "Report created successfully", report });
+  } catch (error) {
+    console.error("Error creating report:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   getReportedBlogs,
   updateReportStatus,
   deleteReport,
+  createReport,
+  deleteMultipleReports, // Export the new function
 };
