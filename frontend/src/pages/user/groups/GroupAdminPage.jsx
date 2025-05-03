@@ -18,7 +18,7 @@ const GroupAdminPage = () => {
   useEffect(() => {
     const fetchGroupData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/groups/count');
+        const response = await axios.get(`http://localhost:5000/api/groups/count`);
         setData(response.data);
         setFilteredGroups(response.data.groups);
       } catch (err) {
@@ -40,14 +40,18 @@ const GroupAdminPage = () => {
       const groupStart = parseDate(group.startDateTime);
       const groupEnd = parseDate(group.endDateTime);
 
-      const matchesTitle = group.title.toLowerCase().includes(searchQuery.toLowerCase());
+      // Search by email (both creator and admin)
+      const matchesEmail = 
+        group.createdBy?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        group.groupAdmin?.email?.toLowerCase().includes(searchQuery.toLowerCase());
+      
       const matchesStart = parsedStart ? groupStart >= parsedStart : true;
       const matchesEnd = parsedEnd ? groupEnd <= parsedEnd : true;
       const overlapsDate = parsedStart && parsedEnd
         ? groupStart <= parsedEnd && groupEnd >= parsedStart
         : true;
 
-      return matchesTitle && matchesStart && matchesEnd && overlapsDate;
+      return matchesEmail && matchesStart && matchesEnd && overlapsDate;
     });
 
     setFilteredGroups(result);
@@ -57,7 +61,7 @@ const GroupAdminPage = () => {
     setSearchQuery('');
     setStartDate('');
     setEndDate('');
-    setFilteredGroups(data.groups); // Optional: resets filtered list
+    setFilteredGroups(data.groups);
   };
 
   const generatePDF = () => {
@@ -146,7 +150,7 @@ const GroupAdminPage = () => {
       <div className="flex flex-wrap gap-4 mb-4 items-end">
         <input
           type="text"
-          placeholder="Search by Title"
+          placeholder="Search by Email"
           className="border border-gray-300 rounded p-2"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}

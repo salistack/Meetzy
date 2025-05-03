@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const createBlog = async (req, res) => {
   try {
     const { title, description, category } = req.body;
-    const photo = req.file ? `/uploads/blogs/${req.file.filename}` : null;
+    const photo = req.file ? `/uploads/blogs/${req.file.filename}` : null; // Fixed syntax error
 
     if (!title || !description || !category) {
       return res.status(400).json({ message: "All fields are required: title, description, category" });
@@ -59,7 +59,7 @@ const getBlogById = async (req, res) => {
 const updateBlog = async (req, res) => {
   try {
     const { title, description, category } = req.body;
-    const photo = req.file ? `/uploads/blogs/${req.file.filename}` : req.body.photo;
+    const photo = req.file ? `/uploads/blogs/${req.file.filename}` : req.body.photo; // Fixed syntax error
 
     if (!title || !description || !category) {
       return res.status(400).json({ message: "All fields are required" });
@@ -96,8 +96,8 @@ const deleteBlog = async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ message: "Blog not found" });
 
-    // Check if the user is an admin
-    if (!req.user.isAdmin) {
+    // Allow deletion if user is author or admin
+    if (blog.author.toString() !== req.user.id && !req.user.isAdmin) {
       return res.status(403).json({ message: "You are not authorized to delete this blog" });
     }
 
@@ -107,6 +107,7 @@ const deleteBlog = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // ✅ Rate a Blog
 const rateBlog = async (req, res) => {

@@ -1,37 +1,37 @@
 import { useState, useEffect } from "react";
-import { 
-  FiHome, 
-  FiSearch, 
-  FiSend, 
-  FiBarChart2, 
-  FiMenu, 
-  FiX, 
-  FiUsers, 
-  FiFileText, 
-  FiPieChart 
+import {
+  FiHome,
+  FiSearch,
+  FiSend,
+  FiBarChart2,
+  FiMenu,
+  FiX,
+  FiUsers,
+  FiFileText,
+  FiPieChart
 } from "react-icons/fi";
-import { 
-  BarChart, 
-  Bar, 
-  LineChart, 
-  Line, 
-  PieChart, 
-  Pie, 
+import {
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
   Cell,
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer 
-} from "recharts"; 
-import Broadcast from "./Broadcast";
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from "recharts";
 import { useNavigate } from "react-router-dom";
-import ReportedBlogs from "./ReportedBlogs";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ReportedBlogs from "./ReportedBlogs";
 import UserDetails from "../../pages/userDetails.jsx";  // Corrected import path
+import AdminBlogsPage from "../../pages/user/blogs/AdminBlogsPage.jsx"; // Correct import
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
@@ -60,14 +60,13 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
 
-      const response = await axios.get('/api/admin/stats'); // Replace mock data with API call
-      console.log("API Response:", response.data); // Log the API response
+      const response = await axios.get('/api/admin/stats');
+      console.log("API Response:", response.data);
 
       if (!response.data || typeof response.data !== 'object') {
         throw new Error("Invalid API response format");
       }
 
-      setStats(response.data);
       setStats(response.data);
       setLoading(false);
     } catch (error) {
@@ -179,13 +178,13 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* New Button to Navigate to UserDetails Page */}
+        {/* Button to Navigate to AdminBlogsPage */}
         <div className="bg-white p-6 rounded-lg shadow-md mt-6">
           <button
-            onClick={() => navigate("/admin/userDetails")}
+            onClick={() => navigate("/user/blogs/AdminBlogsPage")}
             className="bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 w-full"
           >
-            Go to User Details
+            Go to Admin Blogs Page
           </button>
         </div>
       </div>
@@ -210,7 +209,8 @@ const AdminDashboard = () => {
             { name: "Search", icon: <FiSearch />, section: "Search" },
             { name: "Broadcast Message", icon: <FiSend />, section: "Broadcast Message" },
             { name: "Reported blogs", icon: <FiBarChart2 />, section: "Reported blogs" },
-            { name: "User Details", icon: <FiUsers />, section: "UserDetails" }
+            { name: "User Details", icon: <FiUsers />, section: "UserDetails" },
+            { name: "Admin Manage Blogs", icon: <FiFileText />, section: "AdminManageBlogs" },
           ].map((item, index) => (
             <li
               key={index}
@@ -229,19 +229,17 @@ const AdminDashboard = () => {
         <div className="bg-white p-6 pt-20 lg:pt-6">
           <div className="hidden lg:flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold">{active}</h2>
-            <button
-              onClick={handleSignOut}
-              className="text-red-500 font-bold hover:text-red-700"
-            >
+            <button onClick={handleSignOut} className="text-red-500 font-bold hover:text-red-700">
               Sign Out
             </button>
           </div>
 
           {active === "Dashboard" && renderDashboard()}
           {active === "Search" && <h2 className="text-2xl font-bold text-black">Search Section</h2>}
-          {active === "Broadcast Message" && <Broadcast />}
+          {active === "Broadcast Message" && <div>Broadcast Message Section</div>}
           {active === "Reported blogs" && <ReportedBlogs />}
           {active === "UserDetails" && <UserDetails />}
+          {active === "AdminManageBlogs" && <AdminBlogsPage />}
         </div>
       </div>
     </div>

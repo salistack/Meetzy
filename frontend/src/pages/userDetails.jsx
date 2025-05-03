@@ -14,6 +14,7 @@ const UserDetails = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const token = localStorage.getItem("token");
+      const search = filter.trim(); // Get the current filter value
 
       if (!token) {
         setError("No token found. Please log in.");
@@ -26,6 +27,7 @@ const UserDetails = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          params: { search }, // Send the filter term as a query parameter
         });
 
         setUsers(response.data);
@@ -38,7 +40,7 @@ const UserDetails = () => {
     };
 
     fetchUsers();
-  }, []);
+  }, [filter]); // Re-fetch users when filter changes
 
   const handleDelete = async (id) => {
     const token = localStorage.getItem("token");
@@ -55,24 +57,15 @@ const UserDetails = () => {
         },
       });
 
-      setUsers(users.filter((user) => user._id !== id));
-      setFilteredUsers(filteredUsers.filter((user) => user._id !== id));
+      setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
+      setFilteredUsers((prevFilteredUsers) => prevFilteredUsers.filter((user) => user._id !== id));
     } catch (err) {
       setError("Failed to delete user");
     }
   };
 
   const handleFilter = (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    setFilter(searchTerm);
-
-    const filtered = users.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(searchTerm) ||
-        user.email.toLowerCase().includes(searchTerm)
-    );
-
-    setFilteredUsers(filtered);
+    setFilter(e.target.value); // Update the filter state with the input value
   };
 
   const generatePDF = () => {
@@ -82,7 +75,7 @@ const UserDetails = () => {
     doc.text("User Details Report", 14, 20);
 
     doc.setFontSize(12);
-  
+
     // Display total users count
     doc.text(`Total Users: ${filteredUsers.length}`, 14, 30);
 
@@ -95,9 +88,9 @@ const UserDetails = () => {
 
     // Loop through the filtered users and add their data to the PDF
     filteredUsers.forEach((user) => {
-      const fullName = user.fullName || 'N/A';  // Default to 'N/A' if empty or undefined
-      const email = user.email || 'N/A';        // Default to 'N/A' if empty or undefined
-      const phoneNumber = user.phoneNumber || 'N/A';  // Default to 'N/A' if empty or undefined
+      const fullName = user.fullName || "N/A"; // Default to 'N/A' if empty or undefined
+      const email = user.email || "N/A"; // Default to 'N/A' if empty or undefined
+      const phoneNumber = user.phoneNumber || "N/A"; // Default to 'N/A' if empty or undefined
 
       doc.text(fullName, 14, y);
       doc.text(email, 80, y);
@@ -125,7 +118,7 @@ const UserDetails = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-pink-500 text-white py-10">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-300 to-blue-500 text-white py-10">
       <div className="bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-xl w-full max-w-4xl">
         <h2 className="text-3xl font-semibold mb-6">All Users</h2>
 
@@ -139,14 +132,14 @@ const UserDetails = () => {
 
         <button
           onClick={generatePDF} // Call the generatePDF function here
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg mb-6"
+          className="bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded-lg mb-6"
         >
           Generate PDF
         </button>
 
         <table className="min-w-full table-auto text-center">
           <thead>
-            <tr className="bg-purple-500 text-white">
+            <tr className="bg-blue-400 text-white">
               <th className="py-2 px-4">Full Name</th>
               <th className="py-2 px-4">Email</th>
               <th className="py-2 px-4">Phone</th>
@@ -163,7 +156,7 @@ const UserDetails = () => {
                   <td className="py-2 px-4">
                     <button
                       onClick={() => navigate(`/admin/user-details/${user._id}`)}
-                      className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg mr-2"
+                      className="bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded-lg mr-2"
                     >
                       View
                     </button>
@@ -178,7 +171,9 @@ const UserDetails = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="py-4 text-center">No users found</td>
+                <td colSpan="4" className="py-4 text-center">
+                  No users found
+                </td>
               </tr>
             )}
           </tbody>

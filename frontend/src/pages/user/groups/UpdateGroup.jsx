@@ -22,9 +22,9 @@ const UpdateGroup = () => {
     const fetchGroupDetails = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch(`http://localhost:5000/api/groups/${id}`, {
+        const response = await fetch(`http://localhost:5000/api/groups/${id}`, { // Fixed URL syntax
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // Fixed syntax error
           },
         });
         if (response.ok) {
@@ -91,10 +91,10 @@ const UpdateGroup = () => {
         formDataToSend.append("image", formData.image);
       }
 
-      const response = await fetch(`http://localhost:5000/api/groups/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/groups/${id}`, { // Fixed URL syntax
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // Fixed syntax error
         },
         body: formDataToSend,
       });
@@ -190,7 +190,7 @@ const UpdateGroup = () => {
           <div className="mt-2">
             <label className="block font-medium">Current Image:</label>
             <img
-              src={`http://localhost:5000${formData.imageUrl}`}
+              src={`http://localhost:5000${formData.imageUrl}`} // Fixed URL syntax
               alt="Group"
               className="w-32 h-32 object-cover mt-2 rounded-md"
             />

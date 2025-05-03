@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Header from "../../../Components/Header"; // Make sure the path is correct
 
 const CreateBlog = () => {
   const navigate = useNavigate();
@@ -205,29 +206,21 @@ const CreateBlog = () => {
 
   return (
     <div className="min-h-screen bg-slate-100">
-      {/* Header Bar */}
-      <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-4 shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-white">MyBlog</h1>
-          <div className="flex space-x-4">
-            <button 
-              onClick={() => navigate("/blogs")}
-              className="text-white hover:text-yellow-200 transition"
-            >
-              All Blogs
-            </button>
-            <button 
-              className="bg-white text-indigo-700 px-4 py-1 rounded-full font-semibold hover:bg-yellow-100 transition"
-              disabled={isSubmitting}
-              onClick={handleSubmit}
-            >
-              {isSubmitting ? "Publishing..." : "Publish"}
-            </button>
-          </div>
-        </div>
-      </div>
-
+      {/* Use your Header component */}
+      <Header />
+      
       <div className="container mx-auto px-4 py-8 max-w-5xl">
+        {/* Publish button moved to main content area */}
+        <div className="flex justify-end mb-6">
+          <button 
+            className="bg-indigo-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-indigo-700 transition"
+            disabled={isSubmitting}
+            onClick={handleSubmit}
+          >
+            {isSubmitting ? "Publishing..." : "Publish"}
+          </button>
+        </div>
+
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           {/* Writing Toolbar */}
           <div className="flex items-center justify-between p-4 border-b bg-gray-50">
@@ -446,16 +439,6 @@ const CreateBlog = () => {
               </div>
               {errors.photo && <p className="text-red-500 text-sm mt-1">{errors.photo}</p>}
             </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold py-3 px-4 rounded-lg transition-all disabled:opacity-50"
-            >
-              {isSubmitting ? "Publishing..." : "Publish Blog Post"}
-            </button>
           </div>
         </div>
       </div>

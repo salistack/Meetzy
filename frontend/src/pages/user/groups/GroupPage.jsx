@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./index.css";
+import Header from "../../../components/Header";
 
 const GroupsPage = () => {
   const [groups, setGroups] = useState([]);
@@ -36,16 +37,25 @@ const GroupsPage = () => {
       }
     };
 
-    token && userId ? fetchGroups() : (setError("Authentication required"), setIsLoading(false));
+    if (token && userId) {
+      fetchGroups();
+    } else {
+      setError("Authentication required");
+      setIsLoading(false);
+    }
   }, [token, userId]);
 
-  const parseDate = (dateString) => dateString ? new Date(new Date(dateString).setHours(0, 0, 0, 0)) : null;
+  const parseDate = (dateString) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    return new Date(date.setHours(0, 0, 0, 0));
+  };
 
-  const calculateOverlap = (groupStart, groupEnd, filterStart, filterEnd) => {
-    if (!filterStart || !filterEnd) return 0;
-    const start = Math.max(groupStart, filterStart);
-    const end = Math.min(groupEnd, filterEnd);
-    return start < end ? (end - start) / (1000 * 3600 * 24) : 0;
+  const calculateOverlap = (groupStartDate, groupEndDate, parsedStartDate, parsedEndDate) => {
+    if (!parsedStartDate || !parsedEndDate) return 0;
+    const overlapStart = Math.max(groupStartDate, parsedStartDate);
+    const overlapEnd = Math.min(groupEndDate, parsedEndDate);
+    return overlapStart < overlapEnd ? (overlapEnd - overlapStart) / (1000 * 3600 * 24) : 0;
   };
 
   const handleResetFilters = () => {
@@ -54,7 +64,7 @@ const GroupsPage = () => {
     setEndDate("");
   };
 
-  const filteredGroups = groups.filter(group => {
+  const filteredGroups = groups.filter((group) => {
     const groupStart = parseDate(group.startDateTime);
     const groupEnd = parseDate(group.endDateTime);
     const filterStart = parseDate(startDate);
@@ -68,36 +78,46 @@ const GroupsPage = () => {
     );
   });
 
-  const categorizeGroups = filteredGroups.reduce((acc, group) => {
-    const isAdmin = group.groupAdmin === userId;
-    const isMember = group.members?.includes(userId);
-    
-    if (isAdmin) acc.admin.push(group);
-    else if (isMember) acc.joined.push(group);
-    else acc.other.push(group);
+  // Categorize groups with proper admin/member checks
+  const categorizedGroups = filteredGroups.reduce((acc, group) => {
+    const isAdmin = group.groupAdmin?._id === userId || group.groupAdmin === userId;
+    const isMember = group.members?.some(member => 
+      (member?._id === userId) || (member === userId)
+    );
+
+    if (isAdmin) {
+      acc.admin.push(group);
+    } else if (isMember) {
+      acc.joined.push(group);
+    } else {
+      acc.other.push(group);
+    }
     return acc;
   }, { admin: [], joined: [], other: [] });
 
-  const sortGroups = (groups) => groups.sort((a, b) => {
-    const aOverlap = calculateOverlap(
-      parseDate(a.startDateTime),
-      parseDate(a.endDateTime),
-      parseDate(startDate),
-      parseDate(endDate)
-    );
-    const bOverlap = calculateOverlap(
-      parseDate(b.startDateTime),
-      parseDate(b.endDateTime),
-      parseDate(startDate),
-      parseDate(endDate)
-    );
-    return bOverlap - aOverlap;
-  });
+  // Sort each category by date overlap
+  const sortCategory = (category) => {
+    return category.sort((a, b) => {
+      const aOverlap = calculateOverlap(
+        parseDate(a.startDateTime),
+        parseDate(a.endDateTime),
+        parseDate(startDate),
+        parseDate(endDate)
+      );
+      const bOverlap = calculateOverlap(
+        parseDate(b.startDateTime),
+        parseDate(b.endDateTime),
+        parseDate(startDate),
+        parseDate(endDate)
+      );
+      return bOverlap - aOverlap;
+    });
+  };
 
   const sortedGroups = [
-    ...sortGroups(categorizeGroups.admin),
-    ...sortGroups(categorizeGroups.joined),
-    ...sortGroups(categorizeGroups.other)
+    ...sortCategory(categorizedGroups.admin),
+    ...sortCategory(categorizedGroups.joined),
+    ...sortCategory(categorizedGroups.other)
   ];
 
   const handleConnect = async (groupId) => {
@@ -112,14 +132,21 @@ const GroupsPage = () => {
       });
 
       if (!response.ok) throw new Error("Failed to join group");
-      setGroups(groups.map(g => g._id === groupId ? { ...g, members: [...g.members, userId] } : g));
+      setGroups(groups.map(g => g._id === groupId ? {
+        ...g,
+        members: [...g.members, userId]
+      } : g));
     } catch (err) {
       console.error("Join error:", err);
       alert(err.message);
     }
   };
 
-  const isUserInGroup = (group) => group.members?.includes(userId);
+  const isUserInGroup = (group) => {
+    return group.members?.some(member => 
+      (member?._id === userId) || (member === userId)
+    );
+  };
 
   if (isLoading) return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-indigo-600 to-pink-600">
@@ -135,12 +162,16 @@ const GroupsPage = () => {
 
   return (
     <div className="relative bg-gradient-to-r from-indigo-600 to-pink-600 min-h-screen">
+<div className="relative z-10">
+      <Header />
+    </div>
+
       {/* Decorative elements */}
       {[...Array(4)].map((_, i) => (
-        <div key={`left-${i}`} className={`absolute left-0 w-4 h-4 border-l-4 border-t-4 border-indigo-800 rotate-45 transform translate-x-[-10%] translate-y-[${i * 25}%]`} />
+        <div key={`left-${i}`} className={`absolute left-0 w-4 h-4 border-l-4 border-t-4 border-indigo-800 rotate-45 transform -translate-x-1/4 top-${i * 25}%`} />
       ))}
       {[...Array(4)].map((_, i) => (
-        <div key={`right-${i}`} className={`absolute right-0 w-4 h-4 border-r-4 border-t-4 border-indigo-800 rotate-45 transform translate-x-[10%] translate-y-[${i * 25}%]`} />
+        <div key={`right-${i}`} className={`absolute right-0 w-4 h-4 border-r-4 border-t-4 border-indigo-800 rotate-45 transform translate-x-1/4 top-${i * 25}%`} />
       ))}
 
       <div className="container mx-auto px-4 py-8">
@@ -159,13 +190,13 @@ const GroupsPage = () => {
           <input
             type="text"
             placeholder="Search groups..."
-            className="w-2/3 p-4 rounded-lg border-2 border-indigo-800 focus:ring-2 focus:ring-indigo-500 text-lg shadow-md bg-indigo-50"
+            className="w-2/3 p-4 rounded-lg border-2 border-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg shadow-md bg-indigo-50"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
 
-        <div className="flex justify-center items-center mb-8 gap-6">
+        <div className="flex justify-center items-center mb-8 gap-6 flex-wrap">
           <div className="flex items-center gap-3">
             <label className="text-lg text-gray-100">Start Date:</label>
             <input
@@ -214,24 +245,24 @@ const GroupsPage = () => {
                   {new Date(group.endDateTime).toLocaleDateString()}
                 </p>
 
-                <div className="flex justify-center gap-6 mt-6">
+                <div className="flex justify-center gap-4 mt-6 flex-wrap">
                   {isUserInGroup(group) ? (
                     <button
-                      className="bg-green-600 text-white py-3 px-6 rounded-lg shadow-md hover:bg-green-700 transition-all"
+                      className="bg-green-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-700 transition-all text-sm"
                       onClick={() => navigate(`/user/groups/${group._id}/chat`)}
                     >
                       Chat
                     </button>
                   ) : (
                     <button
-                      className="bg-indigo-600 text-white py-3 px-6 rounded-lg shadow-md hover:bg-indigo-700 transition-all"
+                      className="bg-indigo-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition-all text-sm"
                       onClick={() => handleConnect(group._id)}
                     >
                       Connect
                     </button>
                   )}
                   <button
-                    className="bg-indigo-600 text-white py-3 px-6 rounded-lg shadow-md hover:bg-indigo-700 transition-all"
+                    className="bg-indigo-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition-all text-sm"
                     onClick={() => navigate(`/user/groups/${group._id}`)}
                   >
                     Details

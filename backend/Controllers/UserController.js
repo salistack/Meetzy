@@ -54,16 +54,30 @@ const deleteUserProfile = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find(); // Fetch all users (including password — not recommended)
+    const { search } = req.query; // Get the 'search' query parameter
 
-    res.status(200).json(users);
+    // If a 'search' term is provided, filter the users
+    let users;
+    if (search) {
+      users = await User.find({
+        $or: [
+          { fullName: { $regex: search, $options: 'i' } },  // Case-insensitive match for full name
+          { email: { $regex: search, $options: 'i' } }       // Case-insensitive match for email
+        ]
+      });
+    } else {
+      // If no search term is provided, return all users
+      users = await User.find();
+    }
+
+    res.status(200).json(users); // Send the filtered or all users back
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message }); // Handle errors
   }
 };
+
 
 
 

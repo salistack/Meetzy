@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import "./GroupDetails.css";
+import Header from "../../../components/Header.jsx";
 
 const GroupDetails = () => {
   const { id } = useParams();
@@ -156,67 +157,76 @@ const GroupDetails = () => {
 
   if (isLoading) {
     return (
-      <div className="loading-container">
-        <p>Loading group details...</p>
+      <div className="page-container">
+        <Header />
+        <div className="loading-container">
+          <p>Loading group details...</p>
+        </div>
       </div>
     );
   }
 
   if (!group) {
     return (
-      <div className="error-container">
-        <p>Failed to load group details</p>
+      <div className="page-container">
+        <Header />
+        <div className="error-container">
+          <p>Failed to load group details</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="group-details-container">
-      <h2>{group.title}</h2>
-      <p><strong>Location:</strong> {group.location}</p>
-      <p><strong>Description:</strong> {group.description}</p>
-      <p><strong>Start Date & Time:</strong> {new Date(group.startDateTime).toLocaleString()}</p>
-      <p><strong>End Date & Time:</strong> {new Date(group.endDateTime).toLocaleString()}</p>
-      {group.numMembers && <p><strong>Max Members:</strong> {group.numMembers}</p>}
+    <div className="page-container">
+      <Header />
+      <div className="group-details-container">
+        <h2>{group.title}</h2>
+        <p><strong>Location:</strong> {group.location}</p>
+        <p><strong>Description:</strong> {group.description}</p>
+        <p><strong>Start Date & Time:</strong> {new Date(group.startDateTime).toLocaleString()}</p>
+        <p><strong>End Date & Time:</strong> {new Date(group.endDateTime).toLocaleString()}</p>
+        {group.numMembers && <p><strong>Max Members:</strong> {group.numMembers}</p>}
 
-      {group.image && (
-        <img
-          src={`http://localhost:5000${group.image}`}
-          alt="Group"
-          className="group-image"
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = "https://via.placeholder.com/300";
-          }}
-        />
-      )}
-
-      <div className={`group-actions ${group.image ? '' : 'no-image'}`}>
-        {isAdmin && (
-          <>
-            <button onClick={handleUpdate} className="update-btn">Update</button>
-            <button onClick={handleDelete} className="delete-btn">Delete</button>
-          </>
+        {group.image && (
+          <img
+            src={`http://localhost:5000${group.image}`}
+            alt="Group"
+            className="group-image"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "https://via.placeholder.com/300";
+            }}
+          />
         )}
 
-        {isConnected ? (
-          <>
-            <button onClick={handleLeave} className="leave-btn">Leave</button>
-            <button 
-              onClick={() => {
-                const confirmChat = window.confirm("Are you sure you want to enter the chat?");
-                if (confirmChat) {
-                  navigate(`/chat/${id}`);
-                }
-              }} 
-              className="chat-btn"
-            >
-              Chat
-            </button>
-          </>
-        ) : (
-          <button onClick={handleConnect} className="connect-btn">Connect</button>
-        )}
+        <div className={`group-actions ${group.image ? '' : 'no-image'}`}>
+          {isAdmin && (
+            <>
+              <button onClick={handleUpdate} className="update-btn">Update</button>
+              <button onClick={handleDelete} className="delete-btn">Delete</button>
+            </>
+          )}
+
+          {isConnected ? (
+            <>
+              <button onClick={handleLeave} className="leave-btn">Leave</button>
+              <button 
+                onClick={() => {
+                  const confirmChat = window.confirm("Are you sure you want to enter the chat?");
+                  if (confirmChat) {
+                    navigate(`/chat/${id}`);
+                  }
+                }} 
+                className="chat-btn"
+              >
+                Chat
+              </button>
+            </>
+          ) : (
+            <button onClick={handleConnect} className="connect-btn">Connect</button>
+          )}
+        </div>
       </div>
     </div>
   );
