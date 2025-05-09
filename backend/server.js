@@ -145,7 +145,19 @@ const createDefaultAdmin = async () => {
 // Start Server
 const startServer = async () => {
   try {
-    await connectDB();
+    if (!process.env.MONGO_URI) {
+      throw new Error("MONGO_URI is not set in .env file");
+    }
+    await connectDB(); // Only use connectDB for DB connection
+
+    // Wait for mongoose connection to be ready before creating admin
+    if (mongoose.connection.readyState !== 1) {
+      await new Promise((resolve, reject) => {
+        mongoose.connection.once("open", resolve);
+        mongoose.connection.once("error", reject);
+      });
+    }
+
     await createDefaultAdmin();
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
@@ -159,8 +171,5 @@ const startServer = async () => {
   }
 };
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
-
+// Only call startServer
 startServer();
